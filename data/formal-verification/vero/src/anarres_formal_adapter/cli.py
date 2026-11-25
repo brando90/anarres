@@ -16,7 +16,10 @@ from typing import Any
 
 from anarres.core import consume_adapter_invocation, load_source_manifest
 
-from anarres_formal_adapter import evidence_report, runtime_qualification, source_qualification
+from anarres_formal_adapter import evidence_report
+from anarres_formal_adapter import runtime_qualification as runtime_qualification
+from anarres_formal_adapter import source_qualification as source_qualification
+from anarres_formal_adapter.vero_drivers import VeroSourceDriver, VeroVerifierDriver
 
 REPEATED_MEASUREMENT_AUTHORIZATION = "execution-authorization.codex-sol-v2.json"
 REPEATED_MEASUREMENT_RELEASE = "results/repeated-measurement.codex-sol-v2"
@@ -66,17 +69,7 @@ def qualified_source(manifest: Path) -> tuple[Any, dict[str, Any]]:
         expected_domain=descriptor["domain"],
         accepted_formats=tuple(descriptor["source_formats"]),
     )
-    pin = source_qualification.load_source_pin()
-    expected_revision = f"git:{pin['commit']}"
-    if source.revision != expected_revision:
-        raise FormalCliError(
-            f"manifest revision must identify the released Vero commit {expected_revision}"
-        )
-    if source.license != pin["license"]:
-        raise FormalCliError(
-            "manifest license must preserve Vero's benchmark-specific upstream licenses"
-        )
-    return source, source_qualification.qualify(source.source)
+    return source, VeroSourceDriver().qualify(source)
 
 
 def command_qualify_source(args: argparse.Namespace) -> dict[str, Any]:
@@ -112,7 +105,7 @@ def command_qualify_runtime(args: argparse.Namespace) -> dict[str, Any]:
     """Validate a source-bound execution contract without contacting a model."""
 
     source, source_report = qualified_source(args.manifest)
-    report = runtime_qualification.qualify(
+    report = VeroVerifierDriver().preflight(
         contract_path=args.runtime,
         source=source.source,
         source_report=source_report,
@@ -780,6 +773,17 @@ def parser() -> argparse.ArgumentParser:
         description="Inspect and export the released negative Vero development measurement.",
     )
     commands = result.add_subparsers(dest="command", required=True)
+
+    contracts = commands.add_parser("contracts", help="Describe the portable Vero drivers.")
+    contracts.add_argument("--json", action="store_true")
+    contracts.set_defaults(
+        handler=lambda args: {
+            "source_driver": VeroSourceDriver().descriptor(),
+            "verifier_driver": VeroVerifierDriver().descriptor(),
+            "policy_probe": False,
+            "decision": False,
+        }
+    )
 
     qualify_source = commands.add_parser(
         "qualify-source", help="Validate the exact pinned Vero source checkout."
