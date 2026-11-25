@@ -26,6 +26,8 @@ FORMAT = "formal-fixture-v1"
 TOOLCHAIN = "anarres-fixture-equality-v1"
 TASK_BYTES = b"prove literal true\n"
 PROOF_BYTES = b"true\n"
+LICENSE = "Apache-2.0"
+PRODUCING_RUN = "fixture-generator-v1"
 
 
 def artifact(path: str, payload: bytes, run: str) -> dict[str, Any]:
@@ -35,7 +37,7 @@ def artifact(path: str, payload: bytes, run: str) -> dict[str, Any]:
         "sha256": digest(payload),
         "size_bytes": len(payload),
         "media_type": "text/plain",
-        "license": "Apache-2.0",
+        "license": LICENSE,
         "producing_run": run,
     }
 
@@ -53,7 +55,7 @@ def create_source(root: Path) -> dict[str, Any]:
             {
                 "task_id": name,
                 "partition": partition,
-                "artifact": artifact(path, TASK_BYTES, "fixture-generator-v1"),
+                "artifact": artifact(path, TASK_BYTES, PRODUCING_RUN),
                 "groups": {
                     "theorem": name,
                     "specification": name,
@@ -72,7 +74,7 @@ def create_source(root: Path) -> dict[str, Any]:
             "schema_version": "anarres.formal-fixture-source.v1",
             "repository": "synthetic-fixture",
             "task_set": "literal-true-v1",
-            "license": "Apache-2.0",
+            "license": LICENSE,
             "language": "fixture",
             "toolchain": TOOLCHAIN,
             "endpoint": "proof-only",
@@ -202,6 +204,14 @@ class FixtureSourceDriver:
             # Metadata is enough for excluded tasks. Do not stat, resolve, or read them.
             if partition == "held-out":
                 continue
+            # Qualify only metadata that the fixture runner accepts, so no plan names an
+            # attempt the runner would reject.
+            if item["path"] != f"development/{task_id}.txt":
+                raise ValueError("fixture runner requires development/<task_id>.txt artifacts")
+            if item["producing_run"] != PRODUCING_RUN:
+                raise ValueError(f"fixture runner requires producing run {PRODUCING_RUN}")
+            if item["license"] != LICENSE:
+                raise ValueError(f"fixture runner requires license {LICENSE}")
             payload = contained_file(source.source, item["path"]).read_bytes()
             if digest(payload) != item["sha256"] or len(payload) != item["size_bytes"]:
                 raise ValueError("task artifact identity mismatch")
@@ -236,7 +246,8 @@ class FixtureVerifierDriver:
         return driver_identity(
             "verifier-driver",
             TOOLCHAIN,
-            ("fixture.py",),
+            # fixture_cli.py implements the advertised native command.
+            ("fixture.py", "fixture_cli.py"),
             language="fixture",
             toolchain=TOOLCHAIN,
             endpoints=["proof-only"],
@@ -304,7 +315,7 @@ class FixtureRunner:
         task_id = task["task_id"]
         relative_path(task_id)
         if "/" in task_id or task["artifact"] != artifact(
-            f"development/{task_id}.txt", TASK_BYTES, "fixture-generator-v1"
+            f"development/{task_id}.txt", TASK_BYTES, PRODUCING_RUN
         ):
             raise ValueError("runner only supports the literal fixture task")
         if task["dependencies"] or task["context"] or task["allowed_reference_material"]:

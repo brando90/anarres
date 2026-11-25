@@ -2,6 +2,7 @@ import copy
 import importlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -78,6 +79,59 @@ class PortableFormalContractsTest(unittest.TestCase):
         (self.root / "development/a.txt").write_bytes(b"tampered\n")
         with self.assertRaisesRegex(ValueError, "artifact identity mismatch"):
             self.plan()
+
+    def test_fixture_rejects_resealed_task_digest_with_valid_bytes_and_size(self) -> None:
+        # Keep the task bytes and size valid so only the digest comparison can reject this.
+        record = copy.deepcopy(self.record)
+        item = record["tasks"][0]["artifact"]
+        self.assertEqual((self.root / item["path"]).read_bytes(), FIXTURE.TASK_BYTES)
+        self.assertEqual(item["size_bytes"], len(FIXTURE.TASK_BYTES))
+        item["sha256"] = "sha256:" + "0" * 64
+        self.write_record(record)
+        CONTRACTS.verify_seal(json.loads((self.root / "fixture.json").read_bytes()))
+        with self.assertRaisesRegex(ValueError, "task artifact identity mismatch"):
+            FIXTURE.FixtureSourceDriver().qualify(self.source)
+
+    def test_fixture_qualification_rejects_metadata_the_runner_rejects(self) -> None:
+        def renamed(record: dict) -> None:
+            (self.root / "development/a.txt").rename(self.root / "development/renamed.txt")
+            record["tasks"][0]["artifact"].update(
+                path="development/renamed.txt", uri="development/renamed.txt"
+            )
+
+        def producing_run(record: dict) -> None:
+            record["tasks"][0]["artifact"]["producing_run"] = "other-generator-v1"
+
+        def license_(record: dict) -> None:
+            record["license"] = "MIT"
+            for task in record["tasks"]:
+                task["artifact"]["license"] = "MIT"
+            self.source.license = "MIT"
+
+        for change, message in (
+            (renamed, "requires development/<task_id>.txt"),
+            (producing_run, "requires producing run fixture-generator-v1"),
+            (license_, "requires license Apache-2.0"),
+        ):
+            with self.subTest(change=change.__name__):
+                self.setUp()
+                record = copy.deepcopy(self.record)
+                change(record)
+                self.write_record(record)
+                with self.assertRaisesRegex(ValueError, message):
+                    FIXTURE.FixtureSourceDriver().qualify(self.source)
+                with self.assertRaisesRegex(ValueError, message):
+                    self.plan()
+
+    def test_every_planned_fixture_attempt_is_consumed_by_the_runner(self) -> None:
+        qualified = FIXTURE.FixtureSourceDriver().qualify(self.source)
+        self.assertEqual(qualified["status"], "qualified")
+        plan = self.plan()
+        self.assertEqual(len(plan["attempts"]), 4)
+        for request in plan["attempts"]:
+            with self.subTest(task=request["task"]["task_id"], seed=request["seed"]):
+                attempt = FIXTURE.FixtureRunner().run(request)
+                self.assertEqual(attempt["outcome"], "strict-success")
 
     def test_fixture_rejects_resealed_toolchains_assumptions_and_endpoint_changes(self) -> None:
         mutations = {
@@ -475,6 +529,52 @@ class PortableFormalContractsTest(unittest.TestCase):
                 )
                 with self.assertRaisesRegex(ValueError, "identity mismatch"):
                     CONTRACTS.verify_seal(descriptor)
+
+    def test_verifier_identity_changes_with_its_advertised_command_implementation(
+        self,
+    ) -> None:
+        descriptor = FIXTURE.FixtureVerifierDriver().descriptor()
+        self.assertEqual(
+            descriptor["contract"]["native_command"],
+            ["anarres-formal-fixture", "verify-fixture"],
+        )
+        self.assertIn("fixture_cli.py", descriptor["implementation"])
+        command = [
+            sys.executable,
+            "-c",
+            "import json; from anarres_formal_adapter.fixture import FixtureVerifierDriver; "
+            "print(json.dumps(FixtureVerifierDriver().descriptor()))",
+        ]
+
+        def identity(src: Path) -> dict:
+            completed = subprocess.run(
+                command,
+                capture_output=True,
+                text=True,
+                check=True,
+                cwd=self.directory.name,
+                env={**os.environ, "PYTHONPATH": str(src)},
+            )
+            return json.loads(completed.stdout)
+
+        copied = Path(self.directory.name) / "src"
+        shutil.copytree(
+            FORMAL_SRC / "anarres_formal_adapter",
+            copied / "anarres_formal_adapter",
+            ignore=shutil.ignore_patterns("__pycache__"),
+        )
+        before = identity(copied)
+        self.assertEqual(before, descriptor)
+        cli = copied / "anarres_formal_adapter/fixture_cli.py"
+        original = "fixture.FixtureVerifierDriver().verify(sys.stdin.buffer.read())"
+        source = cli.read_text(encoding="utf-8")
+        self.assertEqual(source.count(original), 1)
+        cli.write_text(source.replace(original, '"parser-failure"'), encoding="utf-8")
+        after = identity(copied)
+        self.assertNotEqual(after["content_id"], before["content_id"])
+        self.assertNotEqual(
+            after["implementation"]["fixture_cli.py"], before["implementation"]["fixture_cli.py"]
+        )
 
     def test_vero_drivers_delegate_without_rewriting_released_reports(self) -> None:
         pin = VERO.source_qualification.load_source_pin()
