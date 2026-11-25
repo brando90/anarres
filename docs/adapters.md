@@ -104,7 +104,10 @@ native layout is checked by `qualify`, which reports all invalid LAB task
 specifications together rather than stopping at the first task.
 
 Only the molecular adapter currently declares the portable `policy-probe`
-capability. Its probe remains dry-run unless execution is requested explicitly.
+capability. Its probe only writes a plan unless the adapter-owned `--execute`
+flag requests execution. The `formal-fixture` adapter declares the separate
+`probe-plan` capability, which `anarres probe --dry-run` requires. `inspect`
+reports it as `can_plan_probe` and `probe_plan_ready`.
 The other adapters stop at source or runtime qualification in the shared path.
 Study-specific execution commands retain their own completeness and safety
 gates.

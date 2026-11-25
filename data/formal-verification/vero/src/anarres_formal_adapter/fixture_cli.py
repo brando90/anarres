@@ -75,6 +75,8 @@ def main() -> None:
                 # A plan cannot overwrite native data, including through a parent symlink.
                 if args.output.resolve().is_relative_to(source.source.resolve()):
                     raise ValueError("plan output must be outside the native source")
+                if args.output.resolve() == args.manifest.resolve():
+                    raise ValueError("plan output must not replace the source manifest")
                 if args.output.is_symlink() or (
                     args.output.exists() and args.output.stat().st_nlink != 1
                 ):

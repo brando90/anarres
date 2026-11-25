@@ -1,5 +1,6 @@
 """Exercise the shared native command path from a temporary external directory."""
 
+import importlib
 import json
 import os
 import shlex
@@ -12,14 +13,16 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 BINARY = ROOT / "target/debug/anarres"
+sys.path.insert(0, str(ROOT / "data/formal-verification/vero/src"))
+CONTRACTS = importlib.import_module("anarres_formal_adapter.contracts")
 
 
 @unittest.skipUnless(os.name == "posix", "executable wrappers require POSIX")
 class FormalPortableCliTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        if not BINARY.is_file():
-            subprocess.run(["cargo", "build", "--quiet", "-p", "anarres-cli"], cwd=ROOT, check=True)
+        # Always build so a binary left from another revision cannot decide the result.
+        subprocess.run(["cargo", "build", "--quiet", "-p", "anarres-cli"], cwd=ROOT, check=True)
 
     def test_outside_checkout_init_inspect_qualify_dry_run(self) -> None:
         with tempfile.TemporaryDirectory(prefix="formal-portable-") as directory:
@@ -65,6 +68,15 @@ class FormalPortableCliTest(unittest.TestCase):
             self.assertTrue(doctor["valid"])
             self.assertNotIn("policy-probe", doctor["descriptor"]["capabilities"])
             self.assertEqual(doctor["descriptor"]["source_formats"], ["vero-checkout-v1"])
+            contracts = run("formal", "contracts", "--json").stdout
+            self.assertEqual(contracts, run("formal", "contracts", "--json").stdout)
+            described = json.loads(contracts)
+            self.assertIs(described["policy_probe"], False)
+            for key in ("source_driver", "verifier_driver"):
+                CONTRACTS.verify_seal(described[key])
+            readable = run("formal", "contracts").stdout
+            self.assertIn("Source Driver\n{\n", readable)
+            self.assertIn("Policy probe  false", readable)
             created = json.loads(run("formal-fixture", "create", "source").stdout)
             run(
                 "init",
@@ -130,6 +142,22 @@ class FormalPortableCliTest(unittest.TestCase):
             self.assertIn("symbolic or hard link", refused.stderr)
             self.assertEqual((outside / "source/fixture.json").read_bytes(), native_bytes)
             self.assertEqual(manifest.read_bytes(), manifest_bytes)
+            # A manifest outside its native source is also protected from the plan output.
+            outer = outside / "outer"
+            outer.mkdir()
+            (outside / "source").rename(outer / "native")
+            outer_manifest = outer / "anarres.toml"
+            outer_manifest.write_bytes(manifest_bytes.replace(b'uri = "."', b'uri = "native"'))
+            (outer / "native/anarres.toml").unlink()
+            outer_bytes = outer_manifest.read_bytes()
+            self.assertNotEqual(outer_bytes, manifest_bytes)
+            outer_common = ("probe", "outer", *common[2:])
+            run(*outer_common, "--output", "outer-plan.json", "--dry-run")
+            refused = run(
+                *outer_common, "--output", "outer/anarres.toml", "--force", "--dry-run", ok=False
+            )
+            self.assertIn("must not replace the source manifest", refused.stderr)
+            self.assertEqual(outer_manifest.read_bytes(), outer_bytes)
 
 
 if __name__ == "__main__":

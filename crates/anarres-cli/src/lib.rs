@@ -171,10 +171,10 @@ struct ProbeArgs {
     /// Let the adapter replace an existing output directory.
     #[arg(long)]
     force: bool,
-    /// Print the ordered probe plan without executing the policy or opening held-out tasks.
+    /// Ask the adapter for its ordered probe plan. Requires the `probe-plan` capability.
     #[arg(long)]
     dry_run: bool,
-    /// Additional arguments forwarded literally to the source adapter after `--`.
+    /// Additional arguments forwarded literally to the source adapter after `--`, except `--dry-run`.
     #[arg(last = true, allow_hyphen_values = true)]
     adapter_arguments: Vec<OsString>,
 }

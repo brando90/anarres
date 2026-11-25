@@ -232,13 +232,26 @@ policy execution is available. `inspect` reports those capabilities separately.
 
 The molecular adapter currently declares the portable `policy-probe`
 capability. Its probe binds a qualified reaction environment to a pinned
-starting policy and remains dry-run by default. Robotics exposes a separate
+starting policy. By default it only writes a plan and executes only with the
+adapter-owned `-- --execute` flag. It does not declare `probe-plan`, so the
+core `--dry-run` flag described below does not apply to it. Robotics exposes a separate
 content-addressed planning and execution workflow for the Can study. Finance,
 formal verification, legal reasoning, materials science, and vulnerability
 exploitation currently stop at source or runtime qualification in the shared
 path. Their domain commands preserve the additional gates required before
 model execution. See the [adapter guide](adapters.md) for the exact source
 format and released boundary of each workflow.
+
+`anarres probe <source> --dry-run` asks the adapter for its ordered probe plan
+instead of a policy probe. It requires the `probe-plan` capability, and the
+core forwards the flag to the adapter. Place `--dry-run` before the `--`
+separator. The core rejects a copy after it, and forwards all other arguments
+after `--` literally. A planning capability grants no execution capability.
+`inspect` reports `can_plan_probe` (the adapter declares `probe-plan`) and
+`probe_plan_ready` (the source can be planned now) next to the existing
+probing fields. The `formal-fixture` adapter, described in the
+[formal portability guide](guides/formal-portability.md), declares
+`probe-plan` without `policy-probe`.
 
 Use the built-in probe-run contract when an environment runtime can provide:
 

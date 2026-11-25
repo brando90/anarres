@@ -150,6 +150,37 @@ class PortableFormalContractsTest(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     FIXTURE.FixtureSourceDriver().qualify(self.source)
 
+    def test_fixture_requires_typed_assumption_lists_and_lineage_strings(self) -> None:
+        def set_record(key: str, value: object):
+            return lambda record: record.__setitem__(key, value)
+
+        def set_groups(key: str, value: object):
+            return lambda record: [
+                task["groups"].__setitem__(key, value) for task in record["tasks"]
+            ]
+
+        def set_repository(value: object):
+            return lambda record: (
+                set_record("repository", value)(record),
+                set_groups("repository", value)(record),
+            )
+
+        mutations = {
+            "string axioms": set_record("trusted_axioms", ""),
+            "integer axioms": set_record("trusted_axioms", 0),
+            "object unsafe features": set_record("unsafe_features", {}),
+            "list repository": set_repository(["x"]),
+            "integer task set": set_record("task_set", 1),
+            "empty generation family": set_groups("generation_family", ""),
+        }
+        for label, mutate in mutations.items():
+            with self.subTest(case=label):
+                record = copy.deepcopy(self.record)
+                mutate(record)
+                self.write_record(record)
+                with self.assertRaises(ValueError):
+                    FIXTURE.FixtureSourceDriver().qualify(self.source)
+
     def test_fixture_rejects_manifest_revision_and_license_changes(self) -> None:
         for key, value in (("revision", POLICY_REVISION), ("license", "MIT")):
             with self.subTest(field=key):
@@ -437,6 +468,9 @@ class PortableFormalContractsTest(unittest.TestCase):
         self.assertEqual(verifier.verify(b"true\n"), "strict-success")
         self.assertEqual(verifier.verify(b"false\n"), "strict-proof-failure")
         self.assertEqual(verifier.verify(b"malformed"), "parser-failure")
+        # Blank output is an invalid proof, not a valid unsuccessful attempt.
+        self.assertEqual(verifier.verify(b"\n"), "parser-failure")
+        self.assertEqual(verifier.verify(b""), "parser-failure")
         with self.assertRaisesRegex(ValueError, "unsupported attempt outcome"):
             CONTRACTS.attempt_record(request, "failure", artifacts=[])
 
@@ -469,6 +503,17 @@ class PortableFormalContractsTest(unittest.TestCase):
         for invalid in invalid_requests:
             with self.subTest(request=invalid), self.assertRaises(ValueError):
                 CONTRACTS.attempt_record(invalid, "strict-success", artifacts=[])
+
+    def test_canonical_json_matches_the_fixed_rfc_test_vector(self) -> None:
+        payload = CONTRACTS.canonical({"ratio": 0.1, "name": "\u00e9", "count": 3})
+        self.assertEqual(payload, b'{"count":3,"name":"\\u00e9","ratio":0.1}')
+        self.assertEqual(
+            CONTRACTS.digest(payload),
+            "sha256:cb4388342572d2ff789acd0763d43b173b05ba7d2a402e1850adaa737d39fa25",
+        )
+        for value in (float("nan"), float("inf")):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                CONTRACTS.canonical({"value": value})
 
     def test_candidate_contract_rejects_each_incompatible_identity(self) -> None:
         candidate = CONTRACTS.CandidateContract(

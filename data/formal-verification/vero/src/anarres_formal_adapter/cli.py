@@ -782,7 +782,8 @@ def parser() -> argparse.ArgumentParser:
             "verifier_driver": VeroVerifierDriver().descriptor(),
             "policy_probe": False,
             "decision": False,
-        }
+        },
+        printer=print_contracts,
     )
 
     qualify_source = commands.add_parser(
@@ -843,6 +844,18 @@ def parser() -> argparse.ArgumentParser:
     return result
 
 
+def print_contracts(value: dict[str, Any], as_json: bool) -> None:
+    if as_json:
+        print(json.dumps(value, indent=2, sort_keys=True))
+        return
+    for key in ("source_driver", "verifier_driver"):
+        print(key.replace("_", " ").title())
+        print(json.dumps(value[key], indent=2, sort_keys=True))
+        print()
+    print(f"Policy probe  {json.dumps(value['policy_probe'])}")
+    print(f"Decision      {json.dumps(value['decision'])}")
+
+
 def print_result(value: dict[str, Any], as_json: bool) -> None:
     if as_json:
         print(json.dumps(value, indent=2, sort_keys=True))
@@ -900,7 +913,7 @@ def main() -> None:
         raw_arguments = consume_adapter_invocation(raw_arguments, expected_name="formal")
         arguments = parser().parse_args(raw_arguments)
         output = arguments.handler(arguments)
-        print_result(output, arguments.json)
+        getattr(arguments, "printer", print_result)(output, arguments.json)
     except FileExistsError as error:
         path = error.filename or (error.args[0] if error.args else "output")
         print(f"error: output already exists: {path}", file=sys.stderr)

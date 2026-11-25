@@ -57,7 +57,11 @@ omit incomplete attempts.
 An adapter descriptor lists accepted `source_formats` and declares
 `source-qualification` and `policy-probe` only after both commands pass
 conformance tests on a real native environment. It declares `probe-run-v1` only
-when it emits the shared grouped-attempt interchange. Evidence readers and
+when it emits the shared grouped-attempt interchange. It declares `probe-plan`
+when `probe-source --dry-run` prints an ordered plan without executing the
+policy or opening held-out tasks. The core sends `--dry-run` only to adapters
+that declare `probe-plan`, and `inspect` reports `can_plan_probe` and
+`probe_plan_ready` for it. Planning grants no execution capability. Evidence readers and
 retrospective study reproducers leave `source_formats` empty and do not declare
 source capabilities.
 

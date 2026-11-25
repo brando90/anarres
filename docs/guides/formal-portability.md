@@ -77,8 +77,8 @@ anarres probe native-fixture \
 
 Here the source revision is also a convenient immutable identifier for the
 synthetic fixture policy. A real integration must bind the actual policy
-revision. The plan output lives outside `native-fixture`; the adapter rejects
-an output path inside its native source.
+revision. The plan output lives outside `native-fixture`. The adapter rejects
+an output path inside its native source or equal to its manifest.
 
 The command prints the full plan and writes the same JSON to `plan.json`.
 Its six ordered steps qualify the source, preflight the fixture runtime,
@@ -117,6 +117,10 @@ standard input and returns an attempt record and proof artifact on standard
 output. It validates only the literal fixture contract. No Lean proof, real
 starting policy, source-selection decision, or downstream result is measured
 by this tutorial.
+
+Qualification rejects a task file with more than one hard link, so a
+hard-linked checkout (for example a `cp -al` copy) is rejected, and its path
+checks run before the read rather than on the open file.
 
 The Vero source and runtime path remain available through `anarres formal`.
 General driver discovery, real policy execution, and Dafny, Verus, and Rocq

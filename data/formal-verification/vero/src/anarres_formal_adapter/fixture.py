@@ -130,11 +130,14 @@ class FixtureSourceDriver:
             raise ValueError("wrong fixture toolchain")
         if record["endpoint"] != "proof-only":
             raise ValueError("unsupported fixture endpoint")
-        if record["trusted_axioms"] or record["unsafe_features"]:
+        if record["trusted_axioms"] != [] or record["unsafe_features"] != []:
             raise ValueError("fixture forbids axioms and unsafe features")
         if record["admitted_proofs"] != "forbidden":
             raise ValueError("fixture forbids admitted proofs")
-        if not record["repository"] or not record["task_set"]:
+        if any(
+            not isinstance(record[key], str) or not record[key]
+            for key in ("repository", "task_set")
+        ):
             raise ValueError("fixture source lacks lineage")
         tasks = record["tasks"]
         if not isinstance(tasks, list) or not tasks:
@@ -199,6 +202,10 @@ class FixtureSourceDriver:
                     "generation_family",
                 }
                 or task["groups"]["repository"] != record["repository"]
+                or any(
+                    not isinstance(task["groups"][key], str) or not task["groups"][key]
+                    for key in ("repository", "generation_family")
+                )
             ):
                 raise ValueError("fixture grouping keys are incomplete")
             # Metadata is enough for excluded tasks. Do not stat, resolve, or read them.
@@ -279,7 +286,8 @@ class FixtureVerifierDriver:
     def verify(self, proof: bytes) -> str:
         if proof == PROOF_BYTES:
             return "strict-success"
-        if proof in (b"false\n", b"\n"):
+        # Blank output is not a proof, so it cannot count as a strict proof failure.
+        if proof == b"false\n":
             return "strict-proof-failure"
         return "parser-failure"
 
