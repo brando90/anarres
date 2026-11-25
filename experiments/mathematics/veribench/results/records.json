@@ -1,0 +1,415 @@
+{
+  "commit": "139e8d9b47d44626035594c19d708d6b26a856cc",
+  "figures": [
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.gate_g1.verdict",
+      "key": "gate_g1/verdict",
+      "value": "PASS"
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3-14b.kernel_binary_max_split",
+      "key": "gate_g1/per_model/qwen3-14b/kernel_binary_max_split",
+      "value": 0.3333333333333333
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3.5-9b.kernel_binary_max_split",
+      "key": "gate_g1/per_model/qwen3.5-9b/kernel_binary_max_split",
+      "value": 0.25
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3.5-0.8b.kernel_binary_max_split",
+      "key": "gate_g1/per_model/qwen3.5-0.8b/kernel_binary_max_split",
+      "value": 0.0
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3.5-2b.kernel_binary_max_split",
+      "key": "gate_g1/per_model/qwen3.5-2b/kernel_binary_max_split",
+      "value": 0.0
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3.5-4b.kernel_binary_max_split",
+      "key": "gate_g1/per_model/qwen3.5-4b/kernel_binary_max_split",
+      "value": 0.0
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3-1.7b.kernel_binary_max_split",
+      "key": "gate_g1/per_model/qwen3-1.7b/kernel_binary_max_split",
+      "value": 0.0
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3-4b.kernel_binary_max_split",
+      "key": "gate_g1/per_model/qwen3-4b/kernel_binary_max_split",
+      "value": 0.0
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3-8b.kernel_binary_max_split",
+      "key": "gate_g1/per_model/qwen3-8b/kernel_binary_max_split",
+      "value": 0.0
+    },
+    {
+      "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
+      "id": "e05.qwen3-1.7b-base.cells_declared",
+      "key": "models/qwen3-1.7b-base/execution/cells_declared",
+      "value": 7168
+    },
+    {
+      "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
+      "id": "e05.qwen3-1.7b-base.cells_scored",
+      "key": "models/qwen3-1.7b-base/execution/cells_scored",
+      "value": 7168
+    },
+    {
+      "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
+      "id": "e05.qwen3-1.7b-base.mixed_share",
+      "key": "models/qwen3-1.7b-base/channels/kernel_binary/all_896/mixed_share",
+      "value": 0.0
+    },
+    {
+      "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
+      "id": "e05.qwen3-1.7b-base.mixed_share_wilson95",
+      "key": "models/qwen3-1.7b-base/channels/kernel_binary/all_896/mixed_share_wilson95",
+      "value": [
+        4.336808689942018e-19,
+        0.004269039599185204
+      ]
+    },
+    {
+      "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
+      "id": "e05.qwen3-1.7b-base.verdict",
+      "key": "models/qwen3-1.7b-base/verdict",
+      "value": "SFT warm start needed"
+    },
+    {
+      "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
+      "id": "e05.qwen3-4b-base.cells_declared",
+      "key": "models/qwen3-4b-base/execution/cells_declared",
+      "value": 7168
+    },
+    {
+      "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
+      "id": "e05.qwen3-4b-base.cells_scored",
+      "key": "models/qwen3-4b-base/execution/cells_scored",
+      "value": 7168
+    },
+    {
+      "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
+      "id": "e05.qwen3-4b-base.mixed_share",
+      "key": "models/qwen3-4b-base/channels/kernel_binary/all_896/mixed_share",
+      "value": 0.005580357142857143
+    },
+    {
+      "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
+      "id": "e05.qwen3-4b-base.mixed_share_wilson95",
+      "key": "models/qwen3-4b-base/channels/kernel_binary/all_896/mixed_share_wilson95",
+      "value": [
+        0.002385880470966376,
+        0.01299622788269221
+      ]
+    },
+    {
+      "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
+      "id": "e05.qwen3-4b-base.verdict",
+      "key": "models/qwen3-4b-base/verdict",
+      "value": "SFT warm start needed"
+    },
+    {
+      "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
+      "id": "e05.qwen3-8b-base.cells_declared",
+      "key": "models/qwen3-8b-base/execution/cells_declared",
+      "value": 7168
+    },
+    {
+      "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
+      "id": "e05.qwen3-8b-base.cells_scored",
+      "key": "models/qwen3-8b-base/execution/cells_scored",
+      "value": 7168
+    },
+    {
+      "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
+      "id": "e05.qwen3-8b-base.mixed_share",
+      "key": "models/qwen3-8b-base/channels/kernel_binary/all_896/mixed_share",
+      "value": 0.0
+    },
+    {
+      "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
+      "id": "e05.qwen3-8b-base.mixed_share_wilson95",
+      "key": "models/qwen3-8b-base/channels/kernel_binary/all_896/mixed_share_wilson95",
+      "value": [
+        4.336808689942018e-19,
+        0.004269039599185204
+      ]
+    },
+    {
+      "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
+      "id": "e05.qwen3-8b-base.verdict",
+      "key": "models/qwen3-8b-base/verdict",
+      "value": "SFT warm start needed"
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/selection.json",
+      "id": "e08.verdict",
+      "key": "verdict",
+      "value": "PARTIAL"
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/selection.json",
+      "id": "e08.8B.first_passing_step",
+      "key": "gate_table/1.0/8B/step",
+      "value": 658
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/selection.json",
+      "id": "e08.8B.first_passing_tokens",
+      "key": "gate_table/1.0/8B/cumulative_assistant_tokens",
+      "value": 5752936
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/selection.json",
+      "id": "e08.14B.first_passing_step",
+      "key": "gate_table/0.5/14B/step",
+      "value": 334
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/selection.json",
+      "id": "e08.14B.first_passing_tokens",
+      "key": "gate_table/0.5/14B/cumulative_assistant_tokens",
+      "value": 2884708
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/selection.json",
+      "id": "e08.1.7B.earliest_passing_fraction",
+      "key": "earliest_passing_fraction_per_size/1.7B",
+      "value": null
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/selection.json",
+      "id": "e08.4B.earliest_passing_fraction",
+      "key": "earliest_passing_fraction_per_size/4B",
+      "value": null
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.n_tasks",
+      "key": "n_test_tasks",
+      "value": 222
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.selected_8B.known_cells",
+      "key": "systems/test_sft_8B_f1p0/scopes/all/n_known_cells",
+      "value": 1776
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.selected_8B.scsc",
+      "key": "systems/test_sft_8B_f1p0/scopes/all/point_common_cohort/SCSC",
+      "value": 0.11155942075898573
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.selected_8B.scsc_bootstrap95",
+      "key": "systems/test_sft_8B_f1p0/scopes/all/bootstrap95_task/SCSC",
+      "value": [
+        0.08229694082393288,
+        0.14346574986817337
+      ]
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.selected_14B.scsc",
+      "key": "systems/test_sft_14B_f0p5/scopes/all/point_common_cohort/SCSC",
+      "value": 0.08689777320754248
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.selected_14B.scsc_bootstrap95",
+      "key": "systems/test_sft_14B_f0p5/scopes/all/bootstrap95_task/SCSC",
+      "value": [
+        0.0651072578398674,
+        0.1095353168860988
+      ]
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.base_8B.scsc",
+      "key": "systems/base_8B_e05/scopes/all/point_common_cohort/SCSC",
+      "value": 0.0
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.base_8B.scsc_bootstrap95",
+      "key": "systems/base_8B_e05/scopes/all/bootstrap95_task/SCSC",
+      "value": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.base_14B.scsc",
+      "key": "systems/base14b/scopes/all/point_common_cohort/SCSC",
+      "value": 0.0022925824464484017
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.base_14B.scsc_bootstrap95",
+      "key": "systems/base14b/scopes/all/bootstrap95_task/SCSC",
+      "value": [
+        0.0003769329673886091,
+        0.004498653658409206
+      ]
+    },
+    {
+      "file": "experiments/09_qwen3_1p7b_grpo_scsc_scalar_vs_factor_feedback_vbv1_d013/expt_v1/results/terminal_receipt.json",
+      "id": "e09.status",
+      "key": "status",
+      "value": "FAILED_TECHNICAL_GATE"
+    },
+    {
+      "file": "experiments/09_qwen3_1p7b_grpo_scsc_scalar_vs_factor_feedback_vbv1_d013/expt_v1/results/terminal_receipt.json",
+      "id": "e09.reason",
+      "key": "reason",
+      "value": "failed_probability_support_gate"
+    },
+    {
+      "file": "experiments/09_qwen3_1p7b_grpo_scsc_scalar_vs_factor_feedback_vbv1_d013/expt_v1/results/terminal_receipt.json",
+      "id": "e09.reason_detail",
+      "key": "reason_detail",
+      "value": "4/4077 generated actions outside recomputed old-policy support; 367/4073 finite actions exceed predeclared .05 absolute log-probability tolerance. No optimizer update admitted."
+    },
+    {
+      "file": "experiments/09_qwen3_1p7b_grpo_scsc_scalar_vs_factor_feedback_vbv1_d013/expt_v1/results/terminal_receipt.json",
+      "id": "e09.scientific_completion",
+      "key": "scientific_completion",
+      "value": false
+    },
+    {
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
+      "id": "e25.u48.strict.pass_at_1",
+      "key": "bootstrap_points/u48/A/point",
+      "value": 50.88734567901234
+    },
+    {
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
+      "id": "e25.u48.strict.ci95",
+      "key": "bootstrap_points/u48/A/lo+hi",
+      "value": [
+        43.549479166666664,
+        57.83547794117647
+      ]
+    },
+    {
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
+      "id": "e25.u48.smooth.pass_at_1",
+      "key": "bootstrap_points/u48/B/point",
+      "value": 34.63734567901235
+    },
+    {
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
+      "id": "e25.u48.smooth.ci95",
+      "key": "bootstrap_points/u48/B/lo+hi",
+      "value": [
+        28.992925995024876,
+        40.14487659709816
+      ]
+    },
+    {
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
+      "id": "e25.u48.smooth_minus_strict",
+      "key": "bootstrap_points/u48/B_minus_A/point",
+      "value": -16.25
+    },
+    {
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
+      "id": "e25.u48.smooth_minus_strict.ci95",
+      "key": "bootstrap_points/u48/B_minus_A/lo+hi",
+      "value": [
+        -19.17004399366265,
+        -13.279156384324239
+      ]
+    },
+    {
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
+      "id": "e25.u48.seed_paired_smooth_minus_strict",
+      "key": "per_seed_pair_diff_u48_points",
+      "value": {
+        "s0": 12.52314814814815,
+        "s1": -4.027777777777786,
+        "s2": -57.245370370370374
+      }
+    },
+    {
+      "file": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/results/analysis_e19.json",
+      "id": "e19.auc_irt_2pl",
+      "key": "G1/auc_primary_vs_gate/estimate",
+      "value": 0.8624089805825242
+    },
+    {
+      "file": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/results/analysis_e19.json",
+      "id": "e19.auc_gate",
+      "key": "G1/auc_primary_vs_gate/gate",
+      "value": 0.7
+    },
+    {
+      "file": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/results/analysis_e19.json",
+      "id": "e19.auc_features_only",
+      "key": "G1/estimates/auc_mixed/q8_features_only",
+      "value": 0.9538834951456311
+    },
+    {
+      "file": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/results/analysis_e19.json",
+      "id": "e19.auc_irt_minus_panel_strict_rate",
+      "key": "G1/auc_contrasts/q8_irt_2pl_minus_panel_strict_rate/estimate",
+      "value": 0.010922330097087318
+    },
+    {
+      "file": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/results/analysis_e19.json",
+      "id": "e19.auc_irt_minus_panel_strict_rate_ci95",
+      "key": "G1/auc_contrasts/q8_irt_2pl_minus_panel_strict_rate/ci95",
+      "value": [
+        -0.0038462596259625837,
+        0.026515294346176676
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "sha256": "e45fa0a87d03aa6ef7fe1eb7aa4772371be013aac4fe08b93df373c5431c73b2"
+    },
+    {
+      "path": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
+      "sha256": "c28bdc77fa577fe75a41660db4438325d5addc90bbd4db1cd122a63ab573a77c"
+    },
+    {
+      "path": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/selection.json",
+      "sha256": "47e12d6c217a3e62e47e0d5bcef13478f2ecf52098b7ac6163df91e216e21cdb"
+    },
+    {
+      "path": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "sha256": "64aa9651a5382d545a523218ddf7bb8bf738b8a9648187c7dd05a8c5582af154"
+    },
+    {
+      "path": "experiments/09_qwen3_1p7b_grpo_scsc_scalar_vs_factor_feedback_vbv1_d013/expt_v1/results/terminal_receipt.json",
+      "sha256": "71122b95d8ba2691ff04e7faa09bb9859f44bce3f50e8bdc18fc10f493514ef8"
+    },
+    {
+      "path": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/results/analysis_e19.json",
+      "sha256": "8edbb91d5b57259381cdcaa60013f44382c37b284ff51121b5d3b5b132ef604d"
+    },
+    {
+      "path": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
+      "sha256": "88374c92e0ab9002dd9a2ef453d2b03a77066870bf98db583ea277c81f63216a"
+    }
+  ],
+  "repository": "https://github.com/brando90/rl-4-code-verification"
+}

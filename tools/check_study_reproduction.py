@@ -63,6 +63,11 @@ CHECKS = (
         "scripts/reproduce_tables.py",
     ),
     python_check(
+        "mathematics VeriBench records",
+        "experiments/mathematics/veribench",
+        "scripts/audit_records.py",
+    ),
+    python_check(
         "formal-verification public evidence",
         "experiments/cyber/formal-verification/public-evidence",
         "test_reproduce.py",
