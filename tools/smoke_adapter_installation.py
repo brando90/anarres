@@ -29,6 +29,7 @@ PACKAGES = (
 ADAPTERS = (
     "finance",
     "formal",
+    "formal-fixture",
     "legal",
     "materials",
     "molecular",
@@ -39,6 +40,7 @@ PROFILE_ADAPTERS = ("finance", "formal", "legal", "materials", "molecular", "rob
 ADAPTER_PACKAGES = {
     "finance": "packages/finance",
     "formal": "data/formal-verification/vero",
+    "formal-fixture": "data/formal-verification/vero",
     "legal": "packages/legal",
     "vulnerability": "packages/vulnerability",
     "materials": (
@@ -66,6 +68,92 @@ def command(*arguments: str, cwd: Path | None = None, env: dict[str, str] | None
             print(error.stderr, end="", file=sys.stderr)
         raise
     return result.stdout
+
+
+def formal_fixture_flow(binary: Path, root: Path, env: dict[str, str]) -> dict[str, object]:
+    """Exercise installed formal contracts using native data outside the checkout."""
+    if root.resolve().is_relative_to(ROOT):
+        raise SystemExit("formal fixture smoke must run outside the repository checkout")
+    source = root / "native-source" / "formal-fixture"
+    created = json.loads(
+        command(str(binary), "formal-fixture", "create", str(source), cwd=root, env=env)
+    )
+    command(
+        str(binary),
+        "init",
+        str(source),
+        "--adapter",
+        "formal-fixture",
+        "--revision",
+        created["revision"],
+        "--license",
+        created["license"],
+        cwd=root,
+        env=env,
+    )
+    inspection = json.loads(
+        command(str(binary), "inspect", str(source), "--json", cwd=root, env=env)
+    )
+    if (
+        not inspection["qualification_ready"]
+        or not inspection["probe_plan_ready"]
+        or inspection["probe_ready"]
+    ):
+        raise SystemExit(f"formal fixture readiness was incorrect: {inspection!r}")
+    qualification = json.loads(
+        command(str(binary), "qualify", str(source), "--json", cwd=root, env=env)
+    )
+    if (
+        qualification["status"] != "qualified"
+        or qualification["held_out_tasks_opened"]
+        or qualification["model_execution_started"]
+    ):
+        raise SystemExit(f"formal fixture qualification was incorrect: {qualification!r}")
+
+    plans = []
+    for repetition in (1, 2):
+        output = root / f"formal-fixture-plan-{repetition}.json"
+        printed = command(
+            str(binary),
+            "probe",
+            str(source),
+            "--policy",
+            "fixture-policy",
+            "--policy-revision",
+            created["revision"],
+            "--output",
+            str(output),
+            "--dry-run",
+            "--",
+            "--seed",
+            "3",
+            "--seed",
+            "1",
+            cwd=root,
+            env=env,
+        )
+        saved = output.read_bytes()
+        if printed != output.read_text(encoding="utf-8"):
+            raise SystemExit("formal fixture dry-run did not print its full saved plan")
+        plan = json.loads(saved)
+        if plan["provider_calls"] != 0 or plan["held_out_tasks_opened"]:
+            raise SystemExit("formal fixture planning crossed its execution boundary")
+        if not plan["dry_run"] or plan["execution_available"]:
+            raise SystemExit("formal fixture planning unexpectedly enabled execution")
+        order = [(attempt["task"]["task_id"], attempt["seed"]) for attempt in plan["attempts"]]
+        if order != [("a", 3), ("a", 1), ("b", 3), ("b", 1)]:
+            raise SystemExit(f"formal fixture attempt order was incorrect: {order!r}")
+        plans.append(saved)
+    if plans[0] != plans[1]:
+        raise SystemExit("formal fixture planning was not byte-deterministic")
+    if (source / "held-out").exists():
+        raise SystemExit("formal fixture created a held-out task")
+    return {
+        "formal_fixture_native_source_qualified": True,
+        "formal_fixture_plan_attempts": 4,
+        "formal_fixture_plan_deterministic": True,
+        "formal_fixture_held_out_task_absent": True,
+    }
 
 
 def main() -> int:
@@ -144,6 +232,10 @@ def main() -> int:
             source_formats[adapter] = report["descriptor"].get("source_formats", [])
             executable = scripts / f"anarres-{adapter}{'.exe' if os.name == 'nt' else ''}"
             command(str(executable), "--help", cwd=root, env=installed_environment)
+            if adapter == "formal-fixture":
+                if "policy-probe" in report["descriptor"]["capabilities"]:
+                    raise SystemExit("formal fixture unexpectedly declares policy execution")
+                continue
             status = json.loads(
                 command(
                     str(binary),
@@ -157,6 +249,8 @@ def main() -> int:
                 )
             )
             statuses[adapter] = status.get("status", "reported")
+
+        fixture_flow = formal_fixture_flow(binary, root, installed_environment)
 
         native_source = root / "native-source" / "robotics-can"
         native_source.mkdir(parents=True)
@@ -461,15 +555,18 @@ def main() -> int:
         source_environment["PATH"] = os.pathsep.join(
             [str(tool_bin), source_environment.get("PATH", "")]
         )
+        installed_packages: set[str] = set()
         for adapter, package in ADAPTER_PACKAGES.items():
-            command(
-                "uv",
-                "tool",
-                "install",
-                str(ROOT / package),
-                cwd=ROOT,
-                env=source_environment,
-            )
+            if package not in installed_packages:
+                command(
+                    "uv",
+                    "tool",
+                    "install",
+                    str(ROOT / package),
+                    cwd=ROOT,
+                    env=source_environment,
+                )
+                installed_packages.add(package)
             executable = tool_bin / f"anarres-{adapter}{'.exe' if os.name == 'nt' else ''}"
             descriptor = json.loads(
                 command(
@@ -505,6 +602,7 @@ def main() -> int:
                     "source_installed_adapters": list(source_adapters),
                     "statuses": statuses,
                     "user_flow": {
+                        **fixture_flow,
                         "compatible_panels": compatible_panels,
                         "formal_incompatibility_rejected": True,
                         "legal_native_source_qualified": True,

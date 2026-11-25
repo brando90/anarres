@@ -10,6 +10,13 @@ runtime, and bounded grader controls. It does not adopt Vero's model-facing
 agent integrations, make its 43 repositories independent samples, or authorize
 a downstream training experiment.
 
+The [portable formal-contract tutorial](../../../docs/guides/formal-portability.md)
+demonstrates `init -> inspect -> qualify -> probe --dry-run` on synthetic native
+tasks outside the checkout. [RFC 0008](../../../docs/rfcs/0008-portable-formal-verification-contracts.md)
+defines the source-driver, verifier-driver, and external prover-runner interfaces.
+`anarres formal contracts --json` reports the Vero driver identities. The
+fixture exercises software behavior without a model or proof assistant.
+
 ## Pinned source
 
 [`source-pin.json`](source-pin.json) records the audited Git revision, benchmark

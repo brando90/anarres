@@ -171,6 +171,9 @@ struct ProbeArgs {
     /// Let the adapter replace an existing output directory.
     #[arg(long)]
     force: bool,
+    /// Print the ordered probe plan without executing the policy or opening held-out tasks.
+    #[arg(long)]
+    dry_run: bool,
     /// Additional arguments forwarded literally to the source adapter after `--`.
     #[arg(last = true, allow_hyphen_values = true)]
     adapter_arguments: Vec<OsString>,
@@ -416,6 +419,7 @@ fn execute(command: Command) -> Result<i32, String> {
             &args.policy_revision,
             &args.output,
             args.force,
+            args.dry_run,
             &args.adapter_arguments,
         ),
         Command::Measure(args) => command_measure(args),
@@ -931,6 +935,7 @@ fn command_inspect(args: InspectArgs) -> Result<i32, String> {
         ui::field("License", &report.source_license);
         ui::field("Can qualify", yes_no(report.can_qualify));
         ui::field("Can probe", yes_no(report.can_probe));
+        ui::field("Can plan probe", yes_no(report.can_plan_probe));
         ui::field("Native files", "not checked until qualification");
         for issue in &report.issues {
             ui::warning("Issue", issue);

@@ -8,6 +8,8 @@ license = { text = "Apache-2.0" }
 
 [project.scripts]
 anarres-formal = "anarres_formal_adapter.cli:main"
+anarres-formal-fixture = "anarres_formal_adapter.fixture_cli:main"
+formal-fixture-runner = "anarres_formal_adapter.fixture:runner_main"
 
 [build-system]
 requires = ["hatchling"]

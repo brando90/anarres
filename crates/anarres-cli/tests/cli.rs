@@ -351,11 +351,25 @@ fn write_fake_adapter(directory: &Path, name: &str, version: &str) -> PathBuf {
 
 #[cfg(unix)]
 fn write_fake_source_adapter(directory: &Path, name: &str) -> PathBuf {
+    write_fake_source_adapter_with_capabilities(
+        directory,
+        name,
+        &["policy-probe", "source-qualification"],
+    )
+}
+
+#[cfg(unix)]
+fn write_fake_source_adapter_with_capabilities(
+    directory: &Path,
+    name: &str,
+    capabilities: &[&str],
+) -> PathBuf {
     use std::os::unix::fs::PermissionsExt;
 
     let path = directory.join(format!("anarres-{name}"));
+    let capabilities = serde_json::to_string(capabilities).expect("capabilities are JSON");
     let descriptor = format!(
-        r#"{{"schema_version":"anarres.adapter-descriptor.v1","name":"{name}","version":"0.1.0","protocol_version":2,"domain":"agentic-systems","executable":"anarres-{name}","profile_schema_versions":["anarres.environment-profile-input.v1"],"capabilities":["policy-probe","source-qualification"],"measurement_contracts":[],"source_formats":["openenv"]}}"#
+        r#"{{"schema_version":"anarres.adapter-descriptor.v1","name":"{name}","version":"0.1.0","protocol_version":2,"domain":"agentic-systems","executable":"anarres-{name}","profile_schema_versions":["anarres.environment-profile-input.v1"],"capabilities":{capabilities},"measurement_contracts":[],"source_formats":["openenv"]}}"#
     );
     let script = format!(
         "#!/bin/sh\nif [ \"$1\" = \"--anarres-adapter-descriptor\" ]; then\n  printf '%s\\n' '{descriptor}'\n  exit 0\nfi\nif [ \"$1\" != \"--anarres-adapter-protocol\" ] || [ \"$2\" != \"2\" ] || [ \"$3\" != \"--anarres-adapter-name\" ] || [ \"$4\" != \"{name}\" ]; then\n  exit 64\nfi\nshift 4\nprintf '%s\\n' \"$@\"\n"
@@ -414,6 +428,106 @@ fn qualify_has_stable_json_output() {
     assert_eq!(report["environment_id"], "math-reference-demo-v1");
     assert_eq!(report["status_counts"]["admitted"], 2);
     assert_eq!(report["status_counts"]["repair"], 1);
+}
+
+#[cfg(unix)]
+#[test]
+fn probe_dry_run_dispatches_with_planning_capability_without_policy_execution() {
+    let directory = temporary_directory();
+    let bin = directory.join("bin");
+    fs::create_dir_all(&bin).expect("bin directory is created");
+    write_fake_source_adapter_with_capabilities(
+        &bin,
+        "formal-fixture",
+        &["probe-plan", "source-qualification"],
+    );
+    let environment = write_environment_source(&directory, "formal-fixture");
+    let output = directory.join("probe-plan.json");
+    let arguments = [
+        "probe",
+        environment.to_str().unwrap(),
+        "--policy",
+        "fixture-policy",
+        "--policy-revision",
+        "fixture-policy-v1",
+        "--output",
+        output.to_str().unwrap(),
+    ];
+
+    let doctor = run_with_path(&["adapter", "doctor", "formal-fixture", "--json"], &bin);
+    assert!(doctor.status.success());
+    let inspected = run_with_path(&["inspect", environment.to_str().unwrap(), "--json"], &bin);
+    assert!(inspected.status.success());
+    let report: Value = serde_json::from_slice(&inspected.stdout).expect("inspection is JSON");
+    assert_eq!(report["can_probe"], false);
+    assert_eq!(report["probe_ready"], false);
+    assert_eq!(report["can_plan_probe"], true);
+    assert_eq!(report["probe_plan_ready"], true);
+
+    let mut dry_run_arguments = arguments.to_vec();
+    dry_run_arguments.extend(["--dry-run", "--", "--seed", "0"]);
+    let planned = run_with_path(&dry_run_arguments, &bin);
+    assert!(
+        planned.status.success(),
+        "{}",
+        String::from_utf8_lossy(&planned.stderr)
+    );
+    let planned_arguments = String::from_utf8(planned.stdout).expect("stdout is UTF-8");
+    assert!(planned_arguments.starts_with("probe-source\n--manifest\n"));
+    assert!(planned_arguments.contains("--policy\nfixture-policy\n"));
+    assert!(planned_arguments.contains("--policy-revision\nfixture-policy-v1\n"));
+    assert!(planned_arguments.ends_with("--dry-run\n--seed\n0\n"));
+    assert!(!output.exists());
+
+    let executed = run_with_path(&arguments, &bin);
+    assert_eq!(executed.status.code(), Some(1));
+    assert!(String::from_utf8_lossy(&executed.stderr).contains("does not declare policy probing"));
+    assert!(executed.stdout.is_empty());
+
+    let manifest = environment.join("anarres.toml");
+    let content = fs::read_to_string(&manifest).expect("manifest is readable");
+    fs::write(&manifest, content.replace("0.1.0", "9.0.0")).expect("manifest is updated");
+    let invalid_source = run_with_path(&dry_run_arguments, &bin);
+    assert_eq!(invalid_source.status.code(), Some(1));
+    assert!(String::from_utf8_lossy(&invalid_source.stderr).contains("does not match manifest"));
+    assert!(invalid_source.stdout.is_empty());
+}
+
+#[cfg(unix)]
+#[test]
+fn probe_dry_run_cannot_be_hidden_in_adapter_arguments_or_implied_by_policy_probe() {
+    let directory = temporary_directory();
+    let bin = directory.join("bin");
+    fs::create_dir_all(&bin).expect("bin directory is created");
+    write_fake_source_adapter(&bin, "openenv");
+    let environment = write_environment_source(&directory, "openenv");
+    let output = directory.join("probe-plan.json");
+    let arguments = [
+        "probe",
+        environment.to_str().unwrap(),
+        "--policy",
+        "fixture-policy",
+        "--policy-revision",
+        "fixture-policy-v1",
+        "--output",
+        output.to_str().unwrap(),
+    ];
+
+    let mut dry_run_arguments = arguments.to_vec();
+    dry_run_arguments.push("--dry-run");
+    let missing_capability = run_with_path(&dry_run_arguments, &bin);
+    assert_eq!(missing_capability.status.code(), Some(1));
+    assert!(String::from_utf8_lossy(&missing_capability.stderr).contains("probe-plan"));
+    assert!(missing_capability.stdout.is_empty());
+
+    for flag in ["--dry-run", "--dry-run=true"] {
+        let mut hidden_arguments = arguments.to_vec();
+        hidden_arguments.extend(["--", flag]);
+        let hidden = run_with_path(&hidden_arguments, &bin);
+        assert_eq!(hidden.status.code(), Some(1));
+        assert!(String::from_utf8_lossy(&hidden.stderr).contains("place it before"));
+        assert!(hidden.stdout.is_empty());
+    }
 }
 
 #[cfg(unix)]

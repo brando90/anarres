@@ -50,9 +50,11 @@ pub(crate) struct SourceInspection {
     pub(crate) source_license: String,
     pub(crate) can_qualify: bool,
     pub(crate) can_probe: bool,
+    pub(crate) can_plan_probe: bool,
     pub(crate) source_valid: bool,
     pub(crate) qualification_ready: bool,
     pub(crate) probe_ready: bool,
+    pub(crate) probe_plan_ready: bool,
     pub(crate) issues: Vec<String>,
 }
 
@@ -128,6 +130,7 @@ pub(crate) fn inspect(path: &Path) -> Result<SourceInspection, String> {
     let mut native_format_supported = false;
     let mut can_qualify = false;
     let mut can_probe = false;
+    let mut can_plan_probe = false;
     match adapter::descriptor(&source.adapter) {
         Ok(descriptor) => {
             adapter_installed = true;
@@ -162,6 +165,10 @@ pub(crate) fn inspect(path: &Path) -> Result<SourceInspection, String> {
                 .capabilities
                 .iter()
                 .any(|capability| capability == "policy-probe");
+            can_plan_probe = descriptor
+                .capabilities
+                .iter()
+                .any(|capability| capability == "probe-plan");
         }
         Err(error) => issues.push(error),
     }
@@ -186,9 +193,11 @@ pub(crate) fn inspect(path: &Path) -> Result<SourceInspection, String> {
         source_license: source.source.license,
         can_qualify,
         can_probe,
+        can_plan_probe,
         source_valid,
         qualification_ready: source_valid && can_qualify,
         probe_ready: source_valid && can_probe,
+        probe_plan_ready: source_valid && can_plan_probe,
         issues,
     })
 }
@@ -330,12 +339,26 @@ pub(crate) fn dispatch_probe(
     policy_revision: &str,
     output: &Path,
     force: bool,
+    dry_run: bool,
     adapter_arguments: &[OsString],
 ) -> Result<i32, String> {
     require_text("policy", policy)?;
     require_text("policy_revision", policy_revision)?;
+    if adapter_arguments.iter().any(|argument| {
+        argument == "--dry-run" || argument.to_string_lossy().starts_with("--dry-run=")
+    }) {
+        return Err(
+            "--dry-run is a core probe option; place it before the adapter argument separator `--`"
+                .to_owned(),
+        );
+    }
     let inspection = inspect(path)?;
-    require_operation_ready(&inspection, "policy probe")?;
+    let operation = if dry_run {
+        "probe planning"
+    } else {
+        "policy probe"
+    };
+    require_operation_ready(&inspection, operation)?;
     if output.exists() && !force {
         return Err(format!(
             "{} already exists\nhint: pass --force to let the adapter replace it",
@@ -356,6 +379,9 @@ pub(crate) fn dispatch_probe(
     if force {
         arguments.push(OsString::from("--force"));
     }
+    if dry_run {
+        arguments.push(OsString::from("--dry-run"));
+    }
     arguments.extend_from_slice(adapter_arguments);
     adapter::run(&inspection.adapter, &arguments)
 }
@@ -364,6 +390,7 @@ fn require_operation_ready(inspection: &SourceInspection, operation: &str) -> Re
     let operation_ready = match operation {
         "source qualification" => inspection.qualification_ready,
         "policy probe" => inspection.probe_ready,
+        "probe planning" => inspection.probe_plan_ready,
         _ => false,
     };
     if operation_ready {
@@ -379,6 +406,12 @@ fn require_operation_ready(inspection: &SourceInspection, operation: &str) -> Re
     if operation == "policy probe" && !inspection.can_probe {
         reasons.push(format!(
             "adapter '{}' does not declare policy probing",
+            inspection.adapter
+        ));
+    }
+    if operation == "probe planning" && !inspection.can_plan_probe {
+        reasons.push(format!(
+            "adapter '{}' does not declare probe planning (probe-plan)",
             inspection.adapter
         ));
     }

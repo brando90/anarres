@@ -166,6 +166,15 @@ pub(crate) fn doctor(name: &str, as_json: bool) -> Result<i32, String> {
                         .any(|capability| capability == "policy-probe"),
                 ),
             );
+            crate::ui::field(
+                "Can plan probe",
+                yes_no(
+                    descriptor
+                        .capabilities
+                        .iter()
+                        .any(|capability| capability == "probe-plan"),
+                ),
+            );
         }
         for path in &report.shadowed_paths {
             crate::ui::warning_stderr(format_args!(
@@ -496,7 +505,12 @@ fn validate_descriptor(
         .capabilities
         .iter()
         .any(|capability| capability == "policy-probe");
-    if descriptor.source_formats.is_empty() && (qualifies_sources || probes_sources) {
+    let plans_probes = descriptor
+        .capabilities
+        .iter()
+        .any(|capability| capability == "probe-plan");
+    if descriptor.source_formats.is_empty() && (qualifies_sources || probes_sources || plans_probes)
+    {
         return Err(format!(
             "adapter '{}' declares source capabilities without source_formats",
             adapter.name
@@ -511,6 +525,12 @@ fn validate_descriptor(
     if probes_sources && !qualifies_sources {
         return Err(format!(
             "adapter '{}' declares policy-probe without source-qualification",
+            adapter.name
+        ));
+    }
+    if plans_probes && !qualifies_sources {
+        return Err(format!(
+            "adapter '{}' declares probe-plan without source-qualification",
             adapter.name
         ));
     }
@@ -715,6 +735,15 @@ mod tests {
         source_capable.capabilities = vec!["policy-probe".into(), "source-qualification".into()];
         source_capable.source_formats = vec!["openenv".into()];
         assert!(validate_descriptor(&adapter, &source_capable).is_ok());
+
+        let mut plan_capable = source_capable.clone();
+        plan_capable.capabilities = vec!["probe-plan".into(), "source-qualification".into()];
+        assert!(validate_descriptor(&adapter, &plan_capable).is_ok());
+        plan_capable.source_formats.clear();
+        assert!(validate_descriptor(&adapter, &plan_capable).is_err());
+        plan_capable.source_formats = vec!["openenv".into()];
+        plan_capable.capabilities = vec!["probe-plan".into()];
+        assert!(validate_descriptor(&adapter, &plan_capable).is_err());
 
         let mut duplicate = valid;
         duplicate.capabilities = vec!["profile".into(), "profile".into()];
