@@ -9,20 +9,32 @@
     },
     {
       "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
-      "id": "e01.qwen3-14b.kernel_binary_max_split",
-      "key": "gate_g1/per_model/qwen3-14b/kernel_binary_max_split",
-      "value": 0.3333333333333333
-    },
-    {
-      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
-      "id": "e01.qwen3.5-9b.kernel_binary_max_split",
-      "key": "gate_g1/per_model/qwen3.5-9b/kernel_binary_max_split",
-      "value": 0.25
+      "id": "e01.gate_g1.locked_channel",
+      "key": "gate_g1/locked_channel",
+      "value": "kernel_binary"
     },
     {
       "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
       "id": "e01.qwen3.5-0.8b.kernel_binary_max_split",
       "key": "gate_g1/per_model/qwen3.5-0.8b/kernel_binary_max_split",
+      "value": 0.0
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3.5-0.8b.probe_rows",
+      "key": "labels/qwen3.5-0.8b/n_rows",
+      "value": 1024
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3.5-0.8b.probe_tasks",
+      "key": "labels/qwen3.5-0.8b/channels/kernel_binary/n_groups_measured",
+      "value": 128
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3.5-0.8b.probe_mixed_share",
+      "key": "labels/qwen3.5-0.8b/channels/kernel_binary/q_mixed_empirical",
       "value": 0.0
     },
     {
@@ -33,14 +45,92 @@
     },
     {
       "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3.5-2b.probe_rows",
+      "key": "labels/qwen3.5-2b/n_rows",
+      "value": 1024
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3.5-2b.probe_tasks",
+      "key": "labels/qwen3.5-2b/channels/kernel_binary/n_groups_measured",
+      "value": 128
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3.5-2b.probe_mixed_share",
+      "key": "labels/qwen3.5-2b/channels/kernel_binary/q_mixed_empirical",
+      "value": 0.0
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
       "id": "e01.qwen3.5-4b.kernel_binary_max_split",
       "key": "gate_g1/per_model/qwen3.5-4b/kernel_binary_max_split",
       "value": 0.0
     },
     {
       "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3.5-4b.probe_rows",
+      "key": "labels/qwen3.5-4b/n_rows",
+      "value": 1024
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3.5-4b.probe_tasks",
+      "key": "labels/qwen3.5-4b/channels/kernel_binary/n_groups_measured",
+      "value": 128
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3.5-4b.probe_mixed_share",
+      "key": "labels/qwen3.5-4b/channels/kernel_binary/q_mixed_empirical",
+      "value": 0.0
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3.5-9b.kernel_binary_max_split",
+      "key": "gate_g1/per_model/qwen3.5-9b/kernel_binary_max_split",
+      "value": 0.25
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3.5-9b.probe_rows",
+      "key": "labels/qwen3.5-9b/n_rows",
+      "value": 1024
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3.5-9b.probe_tasks",
+      "key": "labels/qwen3.5-9b/channels/kernel_binary/n_groups_measured",
+      "value": 128
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3.5-9b.probe_mixed_share",
+      "key": "labels/qwen3.5-9b/channels/kernel_binary/q_mixed_empirical",
+      "value": 0.03125
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
       "id": "e01.qwen3-1.7b.kernel_binary_max_split",
       "key": "gate_g1/per_model/qwen3-1.7b/kernel_binary_max_split",
+      "value": 0.0
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3-1.7b.probe_rows",
+      "key": "labels/qwen3-1.7b/n_rows",
+      "value": 1024
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3-1.7b.probe_tasks",
+      "key": "labels/qwen3-1.7b/channels/kernel_binary/n_groups_measured",
+      "value": 128
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3-1.7b.probe_mixed_share",
+      "key": "labels/qwen3-1.7b/channels/kernel_binary/q_mixed_empirical",
       "value": 0.0
     },
     {
@@ -51,9 +141,177 @@
     },
     {
       "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3-4b.probe_rows",
+      "key": "labels/qwen3-4b/n_rows",
+      "value": 1024
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3-4b.probe_tasks",
+      "key": "labels/qwen3-4b/channels/kernel_binary/n_groups_measured",
+      "value": 128
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3-4b.probe_mixed_share",
+      "key": "labels/qwen3-4b/channels/kernel_binary/q_mixed_empirical",
+      "value": 0.0
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
       "id": "e01.qwen3-8b.kernel_binary_max_split",
       "key": "gate_g1/per_model/qwen3-8b/kernel_binary_max_split",
       "value": 0.0
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3-8b.probe_rows",
+      "key": "labels/qwen3-8b/n_rows",
+      "value": 1024
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3-8b.probe_tasks",
+      "key": "labels/qwen3-8b/channels/kernel_binary/n_groups_measured",
+      "value": 128
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3-8b.probe_mixed_share",
+      "key": "labels/qwen3-8b/channels/kernel_binary/q_mixed_empirical",
+      "value": 0.0
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3-14b.kernel_binary_max_split",
+      "key": "gate_g1/per_model/qwen3-14b/kernel_binary_max_split",
+      "value": 0.3333333333333333
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3-14b.probe_rows",
+      "key": "labels/qwen3-14b/n_rows",
+      "value": 1024
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3-14b.probe_tasks",
+      "key": "labels/qwen3-14b/channels/kernel_binary/n_groups_measured",
+      "value": 128
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
+      "id": "e01.qwen3-14b.probe_mixed_share",
+      "key": "labels/qwen3-14b/channels/kernel_binary/q_mixed_empirical",
+      "value": 0.046875
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3.5-0.8b_g1__0.json",
+      "id": "e01.qwen3.5-0.8b.cells",
+      "key": "n_cells",
+      "value": 896
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3.5-0.8b_g1__0.json",
+      "id": "e01.qwen3.5-0.8b.compiling_proved_cells",
+      "key": "as_written/cells_IC_tests_x_IC_proofs_positive/0",
+      "value": 0
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3.5-2b_g1__0.json",
+      "id": "e01.qwen3.5-2b.cells",
+      "key": "n_cells",
+      "value": 896
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3.5-2b_g1__0.json",
+      "id": "e01.qwen3.5-2b.compiling_proved_cells",
+      "key": "as_written/cells_IC_tests_x_IC_proofs_positive/0",
+      "value": 0
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3.5-4b_g1__0.json",
+      "id": "e01.qwen3.5-4b.cells",
+      "key": "n_cells",
+      "value": 896
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3.5-4b_g1__0.json",
+      "id": "e01.qwen3.5-4b.compiling_proved_cells",
+      "key": "as_written/cells_IC_tests_x_IC_proofs_positive/0",
+      "value": 0
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3.5-9b_g1__0.json",
+      "id": "e01.qwen3.5-9b.cells",
+      "key": "n_cells",
+      "value": 896
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3.5-9b_g1__0.json",
+      "id": "e01.qwen3.5-9b.compiling_proved_cells",
+      "key": "as_written/cells_IC_tests_x_IC_proofs_positive/0",
+      "value": 0
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3-1.7b_g1__0.json",
+      "id": "e01.qwen3-1.7b.cells",
+      "key": "n_cells",
+      "value": 896
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3-1.7b_g1__0.json",
+      "id": "e01.qwen3-1.7b.compiling_proved_cells",
+      "key": "as_written/cells_IC_tests_x_IC_proofs_positive/0",
+      "value": 0
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3-4b_g1__0.json",
+      "id": "e01.qwen3-4b.cells",
+      "key": "n_cells",
+      "value": 896
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3-4b_g1__0.json",
+      "id": "e01.qwen3-4b.compiling_proved_cells",
+      "key": "as_written/cells_IC_tests_x_IC_proofs_positive/0",
+      "value": 0
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3-8b_g1__0.json",
+      "id": "e01.qwen3-8b.cells",
+      "key": "n_cells",
+      "value": 896
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3-8b_g1__0.json",
+      "id": "e01.qwen3-8b.compiling_proved_cells",
+      "key": "as_written/cells_IC_tests_x_IC_proofs_positive/0",
+      "value": 0
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3-14b_g1__0.json",
+      "id": "e01.qwen3-14b.cells",
+      "key": "n_cells",
+      "value": 896
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3-14b_g1__0.json",
+      "id": "e01.qwen3-14b.compiling_proved_cells",
+      "key": "as_written/cells_IC_tests_x_IC_proofs_positive/0",
+      "value": 1
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3.6-27b-local_g1__0.json",
+      "id": "e01.qwen3.6-27b-local.cells",
+      "key": "n_cells",
+      "value": 896
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3.6-27b-local_g1__0.json",
+      "id": "e01.qwen3.6-27b-local.compiling_proved_cells",
+      "key": "as_written/cells_IC_tests_x_IC_proofs_positive/0",
+      "value": 0
     },
     {
       "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
@@ -197,6 +455,18 @@
       "value": null
     },
     {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/selection.json",
+      "id": "e08.8B.earliest_passing_fraction",
+      "key": "earliest_passing_fraction_per_size/8B",
+      "value": "1.0"
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/selection.json",
+      "id": "e08.14B.earliest_passing_fraction",
+      "key": "earliest_passing_fraction_per_size/14B",
+      "value": "0.5"
+    },
+    {
       "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
       "id": "e08.test.n_tasks",
       "key": "n_test_tasks",
@@ -269,6 +539,90 @@
       ]
     },
     {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.8B.core.scsc_difference",
+      "key": "paired_differences/8B/core/SCSC_diff/point",
+      "value": 0.16293546979272916
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.8B.core.scsc_difference_bootstrap95",
+      "key": "paired_differences/8B/core/SCSC_diff/bootstrap95",
+      "value": [
+        0.1218984474688415,
+        0.2061628925322233
+      ]
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.8B.core.shared_known_cells",
+      "key": "paired_differences/8B/core/n_shared_known_cells",
+      "value": 1216
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.8B.industryset.scsc_difference",
+      "key": "paired_differences/8B/industryset/SCSC_diff/point",
+      "value": 0.0
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.8B.industryset.scsc_difference_bootstrap95",
+      "key": "paired_differences/8B/industryset/SCSC_diff/bootstrap95",
+      "value": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.8B.industryset.shared_known_cells",
+      "key": "paired_differences/8B/industryset/n_shared_known_cells",
+      "value": 560
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.14B.core.scsc_difference",
+      "key": "paired_differences/14B/core/SCSC_diff/point",
+      "value": 0.12527171643622706
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.14B.core.scsc_difference_bootstrap95",
+      "key": "paired_differences/14B/core/SCSC_diff/bootstrap95",
+      "value": [
+        0.09520108664812171,
+        0.1568278730738621
+      ]
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.14B.core.shared_known_cells",
+      "key": "paired_differences/14B/core/n_shared_known_cells",
+      "value": 1216
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.14B.industryset.scsc_difference",
+      "key": "paired_differences/14B/industryset/SCSC_diff/point",
+      "value": -0.003699332901593501
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.14B.industryset.scsc_difference_bootstrap95",
+      "key": "paired_differences/14B/industryset/SCSC_diff/bootstrap95",
+      "value": [
+        -0.012049038075739277,
+        0.004751403231124478
+      ]
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.14B.industryset.shared_known_cells",
+      "key": "paired_differences/14B/industryset/n_shared_known_cells",
+      "value": 560
+    },
+    {
       "file": "experiments/09_qwen3_1p7b_grpo_scsc_scalar_vs_factor_feedback_vbv1_d013/expt_v1/results/terminal_receipt.json",
       "id": "e09.status",
       "key": "status",
@@ -291,6 +645,36 @@
       "id": "e09.scientific_completion",
       "key": "scientific_completion",
       "value": false
+    },
+    {
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
+      "id": "e25.tasks",
+      "key": "tasks",
+      "value": 135
+    },
+    {
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
+      "id": "e25.u0.cells",
+      "key": "runs/u0/cells",
+      "value": 1080
+    },
+    {
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
+      "id": "e25.u0.strict_successes",
+      "key": "runs/u0/strict_successes",
+      "value": 46
+    },
+    {
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
+      "id": "e25.u0.pass_at_1",
+      "key": "runs/u0/pass_at_1",
+      "value": 0.04259259259259259
+    },
+    {
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
+      "id": "e25.u48.cells_per_run",
+      "key": "runs/A_s0_u048/cells",
+      "value": 4320
     },
     {
       "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
@@ -348,10 +732,44 @@
       }
     },
     {
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
+      "id": "e25.u48.per_run_pass_at_1",
+      "key": "per_seed_u48_points",
+      "value": {
+        "A_s0": 37.33796296296296,
+        "A_s1": 54.25925925925926,
+        "A_s2": 61.06481481481482,
+        "B_s0": 49.861111111111114,
+        "B_s1": 50.231481481481474,
+        "B_s2": 3.8194444444444446
+      }
+    },
+    {
+      "file": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/results/analysis_e19.json",
+      "id": "e19.tasks",
+      "key": "G1/n_tasks",
+      "value": 135
+    },
+    {
+      "file": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/results/analysis_e19.json",
+      "id": "e19.mixed_tasks",
+      "key": "G1/mixed_tasks",
+      "value": 32
+    },
+    {
       "file": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/results/analysis_e19.json",
       "id": "e19.auc_irt_2pl",
       "key": "G1/auc_primary_vs_gate/estimate",
       "value": 0.8624089805825242
+    },
+    {
+      "file": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/results/analysis_e19.json",
+      "id": "e19.auc_irt_2pl.ci95",
+      "key": "G1/auc_primary_vs_gate/ci95",
+      "value": [
+        0.7920382842457372,
+        0.9247688775158532
+      ]
     },
     {
       "file": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/results/analysis_e19.json",
@@ -379,37 +797,172 @@
         -0.0038462596259625837,
         0.026515294346176676
       ]
+    },
+    {
+      "file": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/results/analysis_e19.json",
+      "id": "e19.verdict_g1",
+      "key": "verdicts/G1",
+      "value": "PASS, NOT IRT-SPECIFIC"
+    },
+    {
+      "file": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/results/analysis_e19.json",
+      "id": "e19.irt_beats_baselines_strict",
+      "key": "verdicts/E1_strict_irt_beats_baselines",
+      "value": false
+    },
+    {
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
+      "id": "e25.u48.run_level_permutation_p",
+      "key": "permutation_p(per_seed_u48_points)",
+      "value": 0.5
     }
   ],
   "files": [
     {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
+      "path": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3-1.7b_g1__0.json",
+      "producing_experiment": "01",
+      "producing_run": "expt_v1 diagnostics 10-07-2026",
+      "sha256": "401a4ee15eab999abd85af65eb2fe5b86e72f1685fb926dc65df5835e8c33516",
+      "size": 1786
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
+      "path": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3-14b_g1__0.json",
+      "producing_experiment": "01",
+      "producing_run": "expt_v1 diagnostics 10-07-2026",
+      "sha256": "cc08f71b14ba6387bb94a3b3f8a2ffaa933a88c1b1dd40a5080996b2460bb6e9",
+      "size": 1832
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
+      "path": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3-4b_g1__0.json",
+      "producing_experiment": "01",
+      "producing_run": "expt_v1 diagnostics 10-07-2026",
+      "sha256": "d96836cd00e2e04f4ac9f535b5f7515563caf6f48dcbfcaa17bc46e414038c84",
+      "size": 1798
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
+      "path": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3-8b_g1__0.json",
+      "producing_experiment": "01",
+      "producing_run": "expt_v1 diagnostics 10-07-2026",
+      "sha256": "85fe73b80cd9c0fbd9a74a96c9ce2a92e170845875ee1caab830aa66ce92a376",
+      "size": 1817
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
+      "path": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3.5-0.8b_g1__0.json",
+      "producing_experiment": "01",
+      "producing_run": "expt_v1 diagnostics 10-07-2026",
+      "sha256": "53b38914f7c1d5fbd1bc83ced339132f5f49392ed64bfa276c3e11b527082fd6",
+      "size": 1781
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
+      "path": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3.5-2b_g1__0.json",
+      "producing_experiment": "01",
+      "producing_run": "expt_v1 diagnostics 10-07-2026",
+      "sha256": "4cd0e217a050f8792c7c7c05b484aa549550cb2fb51c2509fa91e06de2b3de9b",
+      "size": 1779
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
+      "path": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3.5-4b_g1__0.json",
+      "producing_experiment": "01",
+      "producing_run": "expt_v1 diagnostics 10-07-2026",
+      "sha256": "084bb0677b3d74b8fd61ee26c040d14a26b757b309b8e3ca69f23c4b162a5f84",
+      "size": 1799
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
+      "path": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3.5-9b_g1__0.json",
+      "producing_experiment": "01",
+      "producing_run": "expt_v1 diagnostics 10-07-2026",
+      "sha256": "0f6ddd2e4f14624d4c65943574c9987399c293be35d851654dceb0cc7e301073",
+      "size": 1801
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
+      "path": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3.6-27b-local_g1__0.json",
+      "producing_experiment": "01",
+      "producing_run": "expt_v1 diagnostics 10-07-2026",
+      "sha256": "76d7ad5568caf5994689e96e2a25180e0262c0cf1db0b6a409dba6aad726f087",
+      "size": 1826
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
       "path": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/probe_channels_summary.json",
-      "sha256": "e45fa0a87d03aa6ef7fe1eb7aa4772371be013aac4fe08b93df373c5431c73b2"
+      "producing_experiment": "01",
+      "producing_run": "expt_v1 probe summary",
+      "sha256": "e45fa0a87d03aa6ef7fe1eb7aa4772371be013aac4fe08b93df373c5431c73b2",
+      "size": 33175
     },
     {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
       "path": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
-      "sha256": "c28bdc77fa577fe75a41660db4438325d5addc90bbd4db1cd122a63ab573a77c"
+      "producing_experiment": "05",
+      "producing_run": "expt_v1 analysis",
+      "sha256": "c28bdc77fa577fe75a41660db4438325d5addc90bbd4db1cd122a63ab573a77c",
+      "size": 31656
     },
     {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
       "path": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/selection.json",
-      "sha256": "47e12d6c217a3e62e47e0d5bcef13478f2ecf52098b7ac6163df91e216e21cdb"
+      "producing_experiment": "08",
+      "producing_run": "expt_v1 checkpoint selection",
+      "sha256": "47e12d6c217a3e62e47e0d5bcef13478f2ecf52098b7ac6163df91e216e21cdb",
+      "size": 5825
     },
     {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
       "path": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
-      "sha256": "64aa9651a5382d545a523218ddf7bb8bf738b8a9648187c7dd05a8c5582af154"
+      "producing_experiment": "08",
+      "producing_run": "expt_v1 held-out test evaluation",
+      "sha256": "64aa9651a5382d545a523218ddf7bb8bf738b8a9648187c7dd05a8c5582af154",
+      "size": 24741
     },
     {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
       "path": "experiments/09_qwen3_1p7b_grpo_scsc_scalar_vs_factor_feedback_vbv1_d013/expt_v1/results/terminal_receipt.json",
-      "sha256": "71122b95d8ba2691ff04e7faa09bb9859f44bce3f50e8bdc18fc10f493514ef8"
+      "producing_experiment": "09",
+      "producing_run": "expt_v1 terminal receipt",
+      "sha256": "71122b95d8ba2691ff04e7faa09bb9859f44bce3f50e8bdc18fc10f493514ef8",
+      "size": 3018
     },
     {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
       "path": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/results/analysis_e19.json",
-      "sha256": "8edbb91d5b57259381cdcaa60013f44382c37b284ff51121b5d3b5b132ef604d"
+      "producing_experiment": "19",
+      "producing_run": "expt_v1 analysis",
+      "sha256": "8edbb91d5b57259381cdcaa60013f44382c37b284ff51121b5d3b5b132ef604d",
+      "size": 163299
     },
     {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
       "path": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
-      "sha256": "88374c92e0ab9002dd9a2ef453d2b03a77066870bf98db583ea277c81f63216a"
+      "producing_experiment": "25",
+      "producing_run": "full_run_at2925 analysis",
+      "sha256": "88374c92e0ab9002dd9a2ef453d2b03a77066870bf98db583ea277c81f63216a",
+      "size": 33493
     }
   ],
+  "license": "Apache-2.0",
   "repository": "https://github.com/brando90/rl-4-code-verification"
 }

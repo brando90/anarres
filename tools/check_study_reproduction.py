@@ -68,6 +68,15 @@ CHECKS = (
         "scripts/audit_records.py",
     ),
     python_check(
+        "mathematics VeriBench records negative test",
+        "experiments/mathematics/veribench/scripts",
+        "-m",
+        "unittest",
+        "discover",
+        "-p",
+        "test_audit_records.py",
+    ),
+    python_check(
         "formal-verification public evidence",
         "experiments/cyber/formal-verification/public-evidence",
         "test_reproduce.py",
