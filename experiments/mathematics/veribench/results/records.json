@@ -811,10 +811,416 @@
       "value": false
     },
     {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3-14b_g1__1.json",
+      "id": "e01.qwen3-14b.namespace_rewrite.cells",
+      "key": "n_cells",
+      "value": 896
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3-14b_g1__1.json",
+      "id": "e01.qwen3-14b.namespace_rewrite.compiling_proved_cells",
+      "key": "as_written/cells_IC_tests_x_IC_proofs_positive/0",
+      "value": 25
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3-14b_g1__1.json",
+      "id": "e01.qwen3-14b.namespace_rewrite.work_dirs",
+      "key": "work_dirs",
+      "value": [
+        "full",
+        "full_nsfix"
+      ]
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3-14b_g1__1.json",
+      "id": "e01.qwen3-14b.namespace_rewrite.limitation",
+      "key": "historical_rewrite_audit/limitation",
+      "value": "legacy regex also rewrote literal/prose text or discovered names only in comments; not guaranteed a pure identifier intervention"
+    },
+    {
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3-14b_g1__1.json",
+      "id": "e01.qwen3-14b.namespace_rewrite.guarded_counterfactual",
+      "key": "historical_rewrite_audit/guarded_counterfactual",
+      "value": "not recompiled; historical measurements unchanged"
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/split/vbv1_split_summary.json",
+      "id": "e08.split.decision",
+      "key": "decision",
+      "value": "D-013"
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/split/vbv1_split_summary.json",
+      "id": "e08.split.tasks",
+      "key": "tasks",
+      "value": 896
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/split/vbv1_split_summary.json",
+      "id": "e08.split.counts",
+      "key": "counts",
+      "value": {
+        "all": {
+          "test": 222,
+          "train": 539,
+          "validation": 135
+        },
+        "core_614": {
+          "test": 152,
+          "train": 369,
+          "validation": 93
+        },
+        "industryset_282": {
+          "test": 70,
+          "train": 170,
+          "validation": 42
+        }
+      }
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/split/vbv1_split_summary.json",
+      "id": "e08.split.manifest_sha256",
+      "key": "manifest_sha256",
+      "value": "157ce781ed9e4ac93a1a1fe0c49f2ee2ae907be1260402485c8f6fa3d06e0e24"
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/split/vbv1_split_summary.json",
+      "id": "e08.split.veribench_commit",
+      "key": "veribench_commit",
+      "value": "c11b99badfa386fd26810b208eef1eb8dc9f6806"
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/scorer_adapter_check.json",
+      "id": "e08.scorer_commit",
+      "key": "scorer/commit",
+      "value": "59059a20d40adf3289869e58302169ad78102877"
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.aggregate_rule",
+      "key": "aggregate_rule",
+      "value": "D-009: SCSC = (mean IC_tests \u00b7 mean IC_proofs \u00b7 mean fsc_compiled)^(1/3) on the common cohort of cells with all three factors known; fsc_compiled = FSC when IC_tests = 1 else 0 (D-003); bounds set unknown factors to 0 / 1"
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/test_eval.json",
+      "id": "e08.test.bootstrap",
+      "key": "bootstrap",
+      "value": {
+        "n_resamples": 10000,
+        "seed": 0,
+        "unit": "task (all 8 samples carried together)"
+      }
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/ladder_manifest.json",
+      "id": "e08.validation.tasks",
+      "key": "n_tasks",
+      "value": 135
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/ladder_manifest.json",
+      "id": "e08.validation.samples_per_task",
+      "key": "samples_per_task",
+      "value": 8
+    },
+    {
+      "file": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/results/analysis_e19.json",
+      "id": "e19.groups",
+      "key": "G1/n_groups",
+      "value": 100
+    },
+    {
+      "file": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/results/analysis_e19.json",
+      "id": "e19.auc_interval_method",
+      "key": "G1/auc_primary_vs_gate/p_test",
+      "value": "percentile bootstrap over validation task groups: share of draws <= 0.70"
+    },
+    {
+      "file": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/results/analysis_e19.json",
+      "id": "e19.bootstrap_draws",
+      "key": "settings/boot",
+      "value": 10000
+    },
+    {
+      "file": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/results/analysis_e19.json",
+      "id": "e19.strict.cells",
+      "key": "E1/strict/cells",
+      "value": 1308
+    },
+    {
+      "file": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/results/analysis_e19.json",
+      "id": "e19.strict.positives",
+      "key": "E1/strict/positives",
+      "value": 609
+    },
+    {
+      "file": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/results/analysis_e19.json",
+      "id": "e19.systems",
+      "key": "panel/systems",
+      "value": [
+        "baseline",
+        "claude-opus-5-max",
+        "claude_code",
+        "codex",
+        "gemini-3.1-pro-high",
+        "gpt-5.6-luna-high",
+        "gpt-5.6-sol-high",
+        "gpt-6-astra-high",
+        "gpt-6-luna-high",
+        "leanstral",
+        "qwen3.6-27b-thinking"
+      ]
+    },
+    {
+      "file": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/results/analysis_e19.json",
+      "id": "e19.start_policy_sha256",
+      "key": "inputs/start_policy",
+      "value": "8fd8dace0a7f4d47f1f4ea536873cafddbceda78ca90b105f44bac8b893b3e2a"
+    },
+    {
+      "file": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/input_pins_e19.json",
+      "id": "e19.start_policy_path",
+      "key": "paths/start_policy",
+      "value": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/ladder/sft_4B_f1p0_validation_per_task.csv"
+    },
+    {
+      "file": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/input_pins_e19.json",
+      "id": "e19.start_policy_pinned_sha256",
+      "key": "sha256/start_policy",
+      "value": "8fd8dace0a7f4d47f1f4ea536873cafddbceda78ca90b105f44bac8b893b3e2a"
+    },
+    {
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
+      "id": "e25.groups",
+      "key": "groups",
+      "value": 100
+    },
+    {
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
+      "id": "e25.u48.strict.groups",
+      "key": "bootstrap_points/u48/A/groups",
+      "value": 100
+    },
+    {
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
+      "id": "e25.u48.smooth.groups",
+      "key": "bootstrap_points/u48/B/groups",
+      "value": 100
+    },
+    {
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
+      "id": "e25.u48.smooth_minus_strict.groups",
+      "key": "bootstrap_points/u48/B_minus_A/groups",
+      "value": 100
+    },
+    {
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
+      "id": "e25.u48.smooth_minus_strict.tasks",
+      "key": "bootstrap_points/u48/B_minus_A/tasks",
+      "value": 135
+    },
+    {
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
+      "id": "e25.u0.samples",
+      "key": "runs/u0/samples_scored",
+      "value": 8
+    },
+    {
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
+      "id": "e25.u48.samples",
+      "key": "runs/A_s0_u048/samples_scored",
+      "value": 32
+    },
+    {
+      "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
+      "id": "e05.qwen3-1.7b-base.tasks_measured",
+      "key": "models/qwen3-1.7b-base/channels/kernel_binary/all_896/tasks_measured",
+      "value": 896
+    },
+    {
+      "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
+      "id": "e05.qwen3-4b-base.tasks_measured",
+      "key": "models/qwen3-4b-base/channels/kernel_binary/all_896/tasks_measured",
+      "value": 896
+    },
+    {
+      "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
+      "id": "e05.qwen3-8b-base.tasks_measured",
+      "key": "models/qwen3-8b-base/channels/kernel_binary/all_896/tasks_measured",
+      "value": 896
+    },
+    {
+      "derivation": "Exact two-sided permutation p over run means: arm A against arm B, three runs each.",
       "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
       "id": "e25.u48.run_level_permutation_p",
       "key": "permutation_p(per_seed_u48_points)",
       "value": 0.5
+    },
+    {
+      "derivation": "Names of the reward channels that the analysis scored.",
+      "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
+      "id": "e05.qwen3-1.7b-base.channels",
+      "key": "channel_names(models/qwen3-1.7b-base/channels)",
+      "value": [
+        "ic_tests",
+        "kernel_binary",
+        "proof_fraction"
+      ]
+    },
+    {
+      "derivation": "Names of the reward channels that the analysis scored.",
+      "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
+      "id": "e05.qwen3-4b-base.channels",
+      "key": "channel_names(models/qwen3-4b-base/channels)",
+      "value": [
+        "ic_tests",
+        "kernel_binary",
+        "proof_fraction"
+      ]
+    },
+    {
+      "derivation": "Names of the reward channels that the analysis scored.",
+      "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
+      "id": "e05.qwen3-8b-base.channels",
+      "key": "channel_names(models/qwen3-8b-base/channels)",
+      "value": [
+        "ic_tests",
+        "kernel_binary",
+        "proof_fraction"
+      ]
+    },
+    {
+      "derivation": "Per task family with any such task: [tasks whose Python file stem starts with a digit, tasks in the family]. VeriBench suggests `namespace {file stem}`, and a Lean identifier cannot start with a digit.",
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/split/vbv1_split_manifest.csv",
+      "id": "e08.split.digit_leading_stems",
+      "key": "digit_leading_stems()",
+      "value": {
+        "easy_set": [
+          41,
+          41
+        ],
+        "realcode_set": [
+          32,
+          32
+        ],
+        "security_set": [
+          460,
+          460
+        ]
+      }
+    },
+    {
+      "derivation": "Number of D-013 task clusters (`group_id`) whose tasks fall in more than one split.",
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/split/vbv1_split_manifest.csv",
+      "id": "e08.split.clusters_spanning_splits",
+      "key": "clusters_spanning_splits()",
+      "value": 0
+    },
+    {
+      "derivation": "[validation tasks, D-013 task clusters among them].",
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/split/vbv1_split_manifest.csv",
+      "id": "e08.split.validation_clusters",
+      "key": "validation_clusters()",
+      "value": [
+        135,
+        100
+      ]
+    },
+    {
+      "derivation": "Number of benchmark families with each count of probe tasks, keyed by that count.",
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/summaries/rho_h_qwen3-14b_g8_kernel_binary.json",
+      "id": "e01.probe_tasks_per_family",
+      "key": "probe_tasks_per_family()",
+      "value": {
+        "1": 1,
+        "3": 1,
+        "4": 31
+      }
+    },
+    {
+      "derivation": "Number of trained checkpoints on the validation ladder for each model size.",
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/ladder_manifest.json",
+      "id": "e08.validation.trained_checkpoints_per_size",
+      "key": "trained_checkpoints_per_size(systems)",
+      "value": {
+        "1.7B": 5,
+        "14B": 5,
+        "4B": 5,
+        "8B": 5
+      }
+    },
+    {
+      "derivation": "The `seed` field of the `sft:` block of a training config.",
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/configs/e08_sft_8B.yaml",
+      "id": "e08.8B.training_seed",
+      "key": "sft_seed()",
+      "value": 20260830
+    },
+    {
+      "derivation": "The `seed` field of the `sft:` block of a training config.",
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/configs/e08_sft_14B.yaml",
+      "id": "e08.14B.training_seed",
+      "key": "sft_seed()",
+      "value": 20260830
+    },
+    {
+      "derivation": "[draws, comment] of the evaluation bootstrap setting `BOOT`.",
+      "file": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/analyze_e19.py",
+      "id": "e19.bootstrap_note",
+      "key": "bootstrap_note()",
+      "value": [
+        10000,
+        "evaluation bootstraps over validation task groups (fitted models held fixed)"
+      ]
+    },
+    {
+      "derivation": "Coverage of the percentile interval that the paired group bootstrap returns.",
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/code/stats_e20.py",
+      "id": "e25.bootstrap_interval_level",
+      "key": "bootstrap_interval_level()",
+      "value": 95.0
+    },
+    {
+      "derivation": "Docstring of the resampling function of the paired group bootstrap.",
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/code/stats_e20.py",
+      "id": "e25.bootstrap_unit",
+      "key": "bootstrap_unit()",
+      "value": "Resample task groups with replacement and return the task indices of the resampled set (cluster bootstrap)."
+    },
+    {
+      "derivation": "Seed passed to the evaluation sampler.",
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/code/eval_local.sh",
+      "id": "e25.eval_sampler_seed",
+      "key": "sampler_seed()",
+      "value": 91
+    },
+    {
+      "derivation": "Precision passed to the trainer.",
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at1788/full_run.sh",
+      "id": "e25.trainer_dtype.seeds_0_1",
+      "key": "trainer_dtype()",
+      "value": "float16"
+    },
+    {
+      "derivation": "Precision passed to the trainer.",
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/full_run5.sh",
+      "id": "e25.trainer_dtype.seed_2",
+      "key": "trainer_dtype()",
+      "value": "float16"
+    },
+    {
+      "derivation": "Docstring of the `kernel_binary` reward.",
+      "file": "src/rl4cv/rewards.py",
+      "id": "kernel_binary.definition",
+      "key": "kernel_binary_definition()",
+      "value": "1 only for a fully verified file: typechecks, has an example, every stated theorem proved, none vacuous."
+    },
+    {
+      "derivation": "Whether the scorer-row reader used by evaluation sets the vacuous-theorem count.",
+      "file": "src/rl4cv/veribench/jobs.py",
+      "id": "e25.evaluation_reads_vacuity",
+      "key": "scored_response_reads_vacuity()",
+      "value": false
     }
   ],
   "files": [
@@ -835,6 +1241,15 @@
       "producing_run": "expt_v1 diagnostics 10-07-2026",
       "sha256": "cc08f71b14ba6387bb94a3b3f8a2ffaa933a88c1b1dd40a5080996b2460bb6e9",
       "size": 1832
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
+      "path": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/diagnostics_10-07-2026/combined_qwen3-14b_g1__1.json",
+      "producing_experiment": "01",
+      "producing_run": "expt_v1 diagnostics 10-07-2026, namespace rewrite",
+      "sha256": "4262b90b2c63c49c4991bd0ba69d6e6367e9b7a696f2abd77be587258c8dd955",
+      "size": 2526
     },
     {
       "license": "Apache-2.0",
@@ -911,11 +1326,56 @@
     {
       "license": "Apache-2.0",
       "media_type": "application/json",
+      "path": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/results/summaries/rho_h_qwen3-14b_g8_kernel_binary.json",
+      "producing_experiment": "01",
+      "producing_run": "expt_v1 probe summary per benchmark family",
+      "sha256": "8f430cda376d848cc3173b4010b3998af6295b68dabe836108a264b76935ed58",
+      "size": 16851
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
       "path": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
       "producing_experiment": "05",
       "producing_run": "expt_v1 analysis",
       "sha256": "c28bdc77fa577fe75a41660db4438325d5addc90bbd4db1cd122a63ab573a77c",
       "size": 31656
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "application/yaml",
+      "path": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/configs/e08_sft_14B.yaml",
+      "producing_experiment": "08",
+      "producing_run": "expt_v1 14B training config",
+      "sha256": "4244709493df989ebae42a5a0fa05d698b3d8cbb32eec2138db9be4235dd91f3",
+      "size": 4308
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "application/yaml",
+      "path": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/configs/e08_sft_8B.yaml",
+      "producing_experiment": "08",
+      "producing_run": "expt_v1 8B training config",
+      "sha256": "031dc04f91c1cf56a1f22f2d7268613bbae38560ec5f94645b3cf57766670ec7",
+      "size": 4307
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
+      "path": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/ladder_manifest.json",
+      "producing_experiment": "08",
+      "producing_run": "expt_v1 validation ladder manifest",
+      "sha256": "3013db1230f27cf021ace50ff53abcc6de2e9f6964ac62968baa80ccb577a948",
+      "size": 10226
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
+      "path": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/scorer_adapter_check.json",
+      "producing_experiment": "08",
+      "producing_run": "expt_v1 scorer adapter check",
+      "sha256": "c0d3bee857023b665f736d038b0778439aa4054aa302b035e11a8f1fe69097dd",
+      "size": 19363
     },
     {
       "license": "Apache-2.0",
@@ -925,6 +1385,24 @@
       "producing_run": "expt_v1 checkpoint selection",
       "sha256": "47e12d6c217a3e62e47e0d5bcef13478f2ecf52098b7ac6163df91e216e21cdb",
       "size": 5825
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "text/csv",
+      "path": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/split/vbv1_split_manifest.csv",
+      "producing_experiment": "08",
+      "producing_run": "expt_v1 D-013 split manifest",
+      "sha256": "157ce781ed9e4ac93a1a1fe0c49f2ee2ae907be1260402485c8f6fa3d06e0e24",
+      "size": 334604
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
+      "path": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/split/vbv1_split_summary.json",
+      "producing_experiment": "08",
+      "producing_run": "expt_v1 D-013 split summary",
+      "sha256": "5c46b261cd46c4c86c0796dd8ec562e72c1f40cfb13a5ca32a1c55100f39d5ec",
+      "size": 4207
     },
     {
       "license": "Apache-2.0",
@@ -946,6 +1424,24 @@
     },
     {
       "license": "Apache-2.0",
+      "media_type": "text/x-python",
+      "path": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/analyze_e19.py",
+      "producing_experiment": "19",
+      "producing_run": "expt_v1 analysis code",
+      "sha256": "f6b05c257ccdc8d40d5d2ea600be63e24dd4af1546137ad87fb9ec2914bb1521",
+      "size": 40162
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
+      "path": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/input_pins_e19.json",
+      "producing_experiment": "19",
+      "producing_run": "expt_v1 input pins",
+      "sha256": "4e1b5690c943c356def73e6488372b90733fd71e2ef27a88d8e704c6a6760171",
+      "size": 2327
+    },
+    {
+      "license": "Apache-2.0",
       "media_type": "application/json",
       "path": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/results/analysis_e19.json",
       "producing_experiment": "19",
@@ -955,12 +1451,66 @@
     },
     {
       "license": "Apache-2.0",
+      "media_type": "text/x-shellscript",
+      "path": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/code/eval_local.sh",
+      "producing_experiment": "25",
+      "producing_run": "expt_v1 evaluation script",
+      "sha256": "40f7400ccb5a2a89b1e6b9f100139ff91f57dec4a9b752e2174e0064b8b70cc2",
+      "size": 2261
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "text/x-python",
+      "path": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/code/stats_e20.py",
+      "producing_experiment": "25",
+      "producing_run": "expt_v1 statistics code",
+      "sha256": "ddcfe99efda0f0297a66cec623ad361b0e7ea3f8a8189b5667740ac367e83a61",
+      "size": 4176
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "text/x-shellscript",
+      "path": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at1788/full_run.sh",
+      "producing_experiment": "25",
+      "producing_run": "full_run_at1788 launch script, seeds 0 and 1",
+      "sha256": "74415a2af8e69b1e832186836931832c5605b0591895d9d4c8685eb2ad65d8e8",
+      "size": 2190
+    },
+    {
+      "license": "Apache-2.0",
       "media_type": "application/json",
       "path": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/analysis_e25.json",
       "producing_experiment": "25",
       "producing_run": "full_run_at2925 analysis",
       "sha256": "88374c92e0ab9002dd9a2ef453d2b03a77066870bf98db583ea277c81f63216a",
       "size": 33493
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "text/x-shellscript",
+      "path": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/full_run5.sh",
+      "producing_experiment": "25",
+      "producing_run": "full_run_at2925 launch script, seed 2",
+      "sha256": "ac673c23cc2a617874ba905a3cde044aabcee3d37e3f5208b7fbadb2f8338f78",
+      "size": 3396
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "text/x-python",
+      "path": "src/rl4cv/rewards.py",
+      "producing_experiment": "shared",
+      "producing_run": "rl4cv package reward definitions",
+      "sha256": "fdc5256566f74c459875dfeca91b3956004d35a90fed17d8975e6275c7c6e9e0",
+      "size": 5818
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "text/x-python",
+      "path": "src/rl4cv/veribench/jobs.py",
+      "producing_experiment": "shared",
+      "producing_run": "rl4cv package scorer-row reader",
+      "sha256": "fb62b7951c4c735d3fe197a097c2e6b4f5e7eb18e33505175572309756528ed8",
+      "size": 5605
     }
   ],
   "license": "Apache-2.0",

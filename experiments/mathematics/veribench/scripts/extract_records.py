@@ -8,16 +8,24 @@ The script reads each source file as stored at the commit named in `PIN`
 (`git show PIN:path`), so a modified working tree cannot change the records.
 Without `--check`, it writes `results/records.json`. With `--check`, it compares
 the extraction with the released file and exits nonzero on any difference.
+
+JSON files are read as documents, CSV files as lists of rows, and other files
+(scripts, configs, source code) as text. A figure from a CSV or text file is
+always a derived figure, with its derivation in a named function below.
 """
 
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
+import io
 import itertools
 import json
+import re
 import subprocess
 import sys
+from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -34,28 +42,51 @@ E01_DIAGNOSTIC = (
     "experiments/01_small_open_models_veribench_v1_single_call_baseline"
     "/expt_v1/results/diagnostics_10-07-2026/combined_{label}_g1__0.json"
 )
+# The same summary with the namespace-rewritten files replacing the cells they edit.
+E01_NAMESPACE = E01_DIAGNOSTIC.format(label="qwen3-14b").replace("__0.json", "__1.json")
+E01_PROBE_FAMILIES = (
+    "experiments/01_small_open_models_veribench_v1_single_call_baseline"
+    "/expt_v1/results/summaries/rho_h_qwen3-14b_g8_kernel_binary.json"
+)
 E05 = (
     "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk"
     "/expt_v1/results/analysis_e05.json"
 )
-_E08 = (
-    "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test"
-    "/expt_v1/results/"
+_E08_RUN = (
+    "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/"
 )
+_E08 = _E08_RUN + "results/"
 E08_SELECTION = _E08 + "selection.json"
 E08_TEST = _E08 + "test_eval.json"
+E08_LADDER = _E08 + "ladder_manifest.json"
+E08_SCORER = _E08 + "scorer_adapter_check.json"
+E08_SPLIT_SUMMARY = _E08 + "split/vbv1_split_summary.json"
+E08_SPLIT_MANIFEST = _E08 + "split/vbv1_split_manifest.csv"
+E08_CONFIG = _E08_RUN + "configs/e08_sft_{size}.yaml"
 E09 = (
     "experiments/09_qwen3_1p7b_grpo_scsc_scalar_vs_factor_feedback_vbv1_d013"
     "/expt_v1/results/terminal_receipt.json"
 )
-E19 = (
-    "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013"
-    "/expt_v1/results/analysis_e19.json"
-)
-E25 = (
-    "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013"
-    "/expt_v1/results/full_run_at2925/analysis_e25.json"
-)
+_E19 = "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/"
+E19 = _E19 + "expt_v1/results/analysis_e19.json"
+E19_PINS = _E19 + "expt_v1/input_pins_e19.json"
+E19_CODE = _E19 + "expt_v1/analyze_e19.py"
+_E25 = "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/"
+E25 = _E25 + "results/full_run_at2925/analysis_e25.json"
+E25_STATS = _E25 + "code/stats_e20.py"
+E25_EVAL = _E25 + "code/eval_local.sh"
+E25_LAUNCH_S01 = _E25 + "results/full_run_at1788/full_run.sh"
+E25_LAUNCH_S2 = _E25 + "results/full_run_at2925/full_run5.sh"
+REWARDS = "src/rl4cv/rewards.py"
+JOBS = "src/rl4cv/veribench/jobs.py"
+
+MEDIA_TYPES = {
+    ".json": "application/json",
+    ".csv": "text/csv",
+    ".py": "text/x-python",
+    ".sh": "text/x-shellscript",
+    ".yaml": "application/yaml",
+}
 
 PROBED = (
     "qwen3.5-0.8b",
@@ -75,10 +106,26 @@ PRODUCED_BY = {
     E05: ("05", "expt_v1 analysis"),
     E08_SELECTION: ("08", "expt_v1 checkpoint selection"),
     E08_TEST: ("08", "expt_v1 held-out test evaluation"),
+    E08_LADDER: ("08", "expt_v1 validation ladder manifest"),
+    E08_SCORER: ("08", "expt_v1 scorer adapter check"),
+    E08_SPLIT_SUMMARY: ("08", "expt_v1 D-013 split summary"),
+    E08_SPLIT_MANIFEST: ("08", "expt_v1 D-013 split manifest"),
     E09: ("09", "expt_v1 terminal receipt"),
     E19: ("19", "expt_v1 analysis"),
+    E19_PINS: ("19", "expt_v1 input pins"),
+    E19_CODE: ("19", "expt_v1 analysis code"),
     E25: ("25", "full_run_at2925 analysis"),
+    E25_STATS: ("25", "expt_v1 statistics code"),
+    E25_EVAL: ("25", "expt_v1 evaluation script"),
+    E25_LAUNCH_S01: ("25", "full_run_at1788 launch script, seeds 0 and 1"),
+    E25_LAUNCH_S2: ("25", "full_run_at2925 launch script, seed 2"),
+    E01_NAMESPACE: ("01", "expt_v1 diagnostics 10-07-2026, namespace rewrite"),
+    E01_PROBE_FAMILIES: ("01", "expt_v1 probe summary per benchmark family"),
+    REWARDS: ("shared", "rl4cv package reward definitions"),
+    JOBS: ("shared", "rl4cv package scorer-row reader"),
 }
+for _size in ("8B", "14B"):
+    PRODUCED_BY[E08_CONFIG.format(size=_size)] = ("08", f"expt_v1 {_size} training config")
 
 # Each figure: (id, source file, key path inside the JSON file).
 FIGURES: list[tuple[str, str, tuple]] = [
@@ -250,6 +297,60 @@ FIGURES += [
     ("e19.verdict_g1", E19, ("verdicts", "G1")),
     ("e19.irt_beats_baselines_strict", E19, ("verdicts", "E1_strict_irt_beats_baselines")),
 ]
+# Added for the scope, interval, and provenance statements.
+FIGURES += [
+    ("e01.qwen3-14b.namespace_rewrite.cells", E01_NAMESPACE, ("n_cells",)),
+    (
+        "e01.qwen3-14b.namespace_rewrite.compiling_proved_cells",
+        E01_NAMESPACE,
+        ("as_written", "cells_IC_tests_x_IC_proofs_positive", 0),
+    ),
+    ("e01.qwen3-14b.namespace_rewrite.work_dirs", E01_NAMESPACE, ("work_dirs",)),
+    (
+        "e01.qwen3-14b.namespace_rewrite.limitation",
+        E01_NAMESPACE,
+        ("historical_rewrite_audit", "limitation"),
+    ),
+    (
+        "e01.qwen3-14b.namespace_rewrite.guarded_counterfactual",
+        E01_NAMESPACE,
+        ("historical_rewrite_audit", "guarded_counterfactual"),
+    ),
+    ("e08.split.decision", E08_SPLIT_SUMMARY, ("decision",)),
+    ("e08.split.tasks", E08_SPLIT_SUMMARY, ("tasks",)),
+    ("e08.split.counts", E08_SPLIT_SUMMARY, ("counts",)),
+    ("e08.split.manifest_sha256", E08_SPLIT_SUMMARY, ("manifest_sha256",)),
+    ("e08.split.veribench_commit", E08_SPLIT_SUMMARY, ("veribench_commit",)),
+    ("e08.scorer_commit", E08_SCORER, ("scorer", "commit")),
+    ("e08.test.aggregate_rule", E08_TEST, ("aggregate_rule",)),
+    ("e08.test.bootstrap", E08_TEST, ("bootstrap",)),
+    ("e08.validation.tasks", E08_LADDER, ("n_tasks",)),
+    ("e08.validation.samples_per_task", E08_LADDER, ("samples_per_task",)),
+    ("e19.groups", E19, ("G1", "n_groups")),
+    ("e19.auc_interval_method", E19, ("G1", "auc_primary_vs_gate", "p_test")),
+    ("e19.bootstrap_draws", E19, ("settings", "boot")),
+    ("e19.strict.cells", E19, ("E1", "strict", "cells")),
+    ("e19.strict.positives", E19, ("E1", "strict", "positives")),
+    ("e19.systems", E19, ("panel", "systems")),
+    ("e19.start_policy_sha256", E19, ("inputs", "start_policy")),
+    ("e19.start_policy_path", E19_PINS, ("paths", "start_policy")),
+    ("e19.start_policy_pinned_sha256", E19_PINS, ("sha256", "start_policy")),
+    ("e25.groups", E25, ("groups",)),
+    ("e25.u48.strict.groups", E25, ("bootstrap_points", "u48", "A", "groups")),
+    ("e25.u48.smooth.groups", E25, ("bootstrap_points", "u48", "B", "groups")),
+    ("e25.u48.smooth_minus_strict.groups", E25, ("bootstrap_points", "u48", "B_minus_A", "groups")),
+    ("e25.u48.smooth_minus_strict.tasks", E25, ("bootstrap_points", "u48", "B_minus_A", "tasks")),
+    ("e25.u0.samples", E25, ("runs", "u0", "samples_scored")),
+    ("e25.u48.samples", E25, ("runs", "A_s0_u048", "samples_scored")),
+]
+for _model in ("qwen3-1.7b-base", "qwen3-4b-base", "qwen3-8b-base"):
+    FIGURES.append(
+        (
+            f"e05.{_model}.tasks_measured",
+            E05,
+            ("models", _model, "channels", "kernel_binary", "all_896", "tasks_measured"),
+        )
+    )
 
 
 def permutation_p(per_run: dict[str, float]) -> float:
@@ -268,6 +369,96 @@ def permutation_p(per_run: dict[str, float]) -> float:
     return extreme / total
 
 
+def channel_names(channels: dict[str, dict]) -> list[str]:
+    """Names of the reward channels that the analysis scored."""
+    return sorted(channels)
+
+
+def digit_leading_stems(rows: list[dict[str, str]]) -> dict[str, list[int]]:
+    """Per task family with any such task: [tasks whose Python file stem starts with a digit,
+    tasks in the family]. VeriBench suggests `namespace {file stem}`, and a Lean identifier
+    cannot start with a digit."""
+    digit = Counter(r["family"] for r in rows if Path(r["py_relpath"]).stem[0].isdigit())
+    size = Counter(r["family"] for r in rows)
+    return {family: [digit[family], size[family]] for family in sorted(digit)}
+
+
+def clusters_spanning_splits(rows: list[dict[str, str]]) -> int:
+    """Number of D-013 task clusters (`group_id`) whose tasks fall in more than one split."""
+    splits: dict[str, set[str]] = {}
+    for row in rows:
+        splits.setdefault(row["group_id"], set()).add(row["split"])
+    return sum(len(names) > 1 for names in splits.values())
+
+
+def validation_clusters(rows: list[dict[str, str]]) -> list[int]:
+    """[validation tasks, D-013 task clusters among them]."""
+    validation = [row for row in rows if row["split"] == "validation"]
+    return [len(validation), len({row["group_id"] for row in validation})]
+
+
+def probe_tasks_per_family(families: dict[str, dict]) -> dict[str, int]:
+    """Number of benchmark families with each count of probe tasks, keyed by that count."""
+    counts = Counter(str(family["n_groups"]) for family in families.values())
+    return dict(sorted(counts.items()))
+
+
+def trained_checkpoints_per_size(systems: list[dict]) -> dict[str, int]:
+    """Number of trained checkpoints on the validation ladder for each model size."""
+    return dict(sorted(Counter(s["size"] for s in systems if s["role"] == "trained").items()))
+
+
+def _one(pattern: str, text: str) -> str:
+    found = re.findall(pattern, text, flags=re.MULTILINE)
+    if len(set(found)) != 1:
+        raise ValueError(f"expected one value for {pattern!r}, found {found}")
+    return found[0]
+
+
+def sft_seed(text: str) -> int:
+    """The `seed` field of the `sft:` block of a training config."""
+    return int(_one(r"^sft:\n(?:  .*\n)*?  seed: (\d+)$", text))
+
+
+def bootstrap_note(text: str) -> list[object]:
+    """[draws, comment] of the evaluation bootstrap setting `BOOT`."""
+    draws, comment = re.findall(r"^BOOT = ([\d_]+)  # (.*)$", text, flags=re.MULTILINE)[0]
+    return [int(draws), comment]
+
+
+def bootstrap_interval_level(text: str) -> float:
+    """Coverage of the percentile interval that the paired group bootstrap returns."""
+    low, high = _one(r"np\.percentile\(boot, \[([\d.]+), ([\d.]+)\]\)", text)
+    return float(high) - float(low)
+
+
+def bootstrap_unit(text: str) -> str:
+    """Docstring of the resampling function of the paired group bootstrap."""
+    return _one(r'def group_bootstrap_indices\(.*\n\s+"""(.*)"""', text)
+
+
+def sampler_seed(text: str) -> int:
+    """Seed passed to the evaluation sampler."""
+    return int(_one(r"--seed (\d+)", text))
+
+
+def trainer_dtype(text: str) -> str:
+    """Precision passed to the trainer."""
+    return _one(r"--dtype (\S+)", text)
+
+
+def kernel_binary_definition(text: str) -> str:
+    """Docstring of the `kernel_binary` reward."""
+    return _one(r'def reward_kernel_binary\(.*\n\s+"""(.*)"""', text)
+
+
+def scored_response_reads_vacuity(text: str) -> bool:
+    """Whether the scorer-row reader used by evaluation sets the vacuous-theorem count."""
+    body = text[text.index("def scored_response(") :]
+    body = body[: body.index("\ndef ", 1)]
+    return "vacuous" in body
+
+
 # Derived figures: (id, source file, key path of the input, function of the input).
 DERIVED = [
     (
@@ -276,6 +467,35 @@ DERIVED = [
         ("per_seed_u48_points",),
         permutation_p,
     ),
+    *(
+        (
+            f"e05.{model}.channels",
+            E05,
+            ("models", model, "channels"),
+            channel_names,
+        )
+        for model in ("qwen3-1.7b-base", "qwen3-4b-base", "qwen3-8b-base")
+    ),
+    ("e08.split.digit_leading_stems", E08_SPLIT_MANIFEST, (), digit_leading_stems),
+    ("e08.split.clusters_spanning_splits", E08_SPLIT_MANIFEST, (), clusters_spanning_splits),
+    ("e08.split.validation_clusters", E08_SPLIT_MANIFEST, (), validation_clusters),
+    ("e01.probe_tasks_per_family", E01_PROBE_FAMILIES, (), probe_tasks_per_family),
+    (
+        "e08.validation.trained_checkpoints_per_size",
+        E08_LADDER,
+        ("systems",),
+        trained_checkpoints_per_size,
+    ),
+    ("e08.8B.training_seed", E08_CONFIG.format(size="8B"), (), sft_seed),
+    ("e08.14B.training_seed", E08_CONFIG.format(size="14B"), (), sft_seed),
+    ("e19.bootstrap_note", E19_CODE, (), bootstrap_note),
+    ("e25.bootstrap_interval_level", E25_STATS, (), bootstrap_interval_level),
+    ("e25.bootstrap_unit", E25_STATS, (), bootstrap_unit),
+    ("e25.eval_sampler_seed", E25_EVAL, (), sampler_seed),
+    ("e25.trainer_dtype.seeds_0_1", E25_LAUNCH_S01, (), trainer_dtype),
+    ("e25.trainer_dtype.seed_2", E25_LAUNCH_S2, (), trainer_dtype),
+    ("kernel_binary.definition", REWARDS, (), kernel_binary_definition),
+    ("e25.evaluation_reads_vacuity", JOBS, (), scored_response_reads_vacuity),
 ]
 
 
@@ -292,6 +512,17 @@ def pick(document: object, keys: tuple) -> object:
     return document
 
 
+def parse(relative: str, payload: bytes) -> object:
+    """JSON as a document, CSV as a list of rows, and any other file as text."""
+    suffix = Path(relative).suffix
+    if suffix == ".json":
+        return json.loads(payload)
+    text = payload.decode("utf-8")
+    if suffix == ".csv":
+        return list(csv.DictReader(io.StringIO(text)))
+    return text
+
+
 def read_at_pin(source: Path, relative: str) -> bytes:
     return subprocess.run(
         ["git", "-C", str(source), "show", f"{PIN}:{relative}"],
@@ -306,7 +537,7 @@ def extract(source: Path) -> dict[str, object]:
     def load(relative: str) -> object:
         if relative not in cache:
             payload = read_at_pin(source, relative)
-            cache[relative] = (payload, json.loads(payload))
+            cache[relative] = (payload, parse(relative, payload))
         return cache[relative][1]
 
     figures = []
@@ -328,6 +559,7 @@ def extract(source: Path) -> dict[str, object]:
                 "id": figure_id,
                 "file": relative,
                 "key": f"{function.__name__}({'/'.join(keys)})",
+                "derivation": " ".join((function.__doc__ or "").split()),
                 "value": function(pick(load(relative), keys)),  # type: ignore[arg-type]
             }
         )
@@ -340,7 +572,7 @@ def extract(source: Path) -> dict[str, object]:
                 "path": relative,
                 "sha256": digest(payload),
                 "size": len(payload),
-                "media_type": "application/json",
+                "media_type": MEDIA_TYPES[Path(relative).suffix],
                 "license": LICENSE,
                 "producing_experiment": experiment,
                 "producing_run": run,
