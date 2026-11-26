@@ -1032,6 +1032,74 @@
       "value": 32
     },
     {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/parent_training_complete_10-11-2026.json",
+      "id": "e08.training.precision",
+      "key": "recipe/precision",
+      "value": "bf16"
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/parent_training_complete_10-11-2026.json",
+      "id": "e08.training.nemo_revision",
+      "key": "pins/nemo_revision",
+      "value": "c751f811217db7df0d4c94abdeaada6626cfc150"
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/judge/controls_check.json",
+      "id": "e08.judge.identity_evidence",
+      "key": "identity_evidence",
+      "value": "Frozen request envelope and returned no-fallback receipt; provider-returned model/effort fields are unavailable in the validated bundle."
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/judge/fsc_test_sft_8B_f1p0.json",
+      "id": "e08.judge.8B.configs",
+      "key": "configs",
+      "value": [
+        "H2_sol_high",
+        "H2_opus55_max"
+      ]
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/judge/fsc_test_sft_8B_f1p0.json",
+      "id": "e08.judge.8B.repeats",
+      "key": "repeats",
+      "value": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/judge/fsc_test_sft_8B_f1p0.json",
+      "id": "e08.judge.8B.rule",
+      "key": "rule",
+      "value": "median of all 3 declared ratings per member, FSC = mean of the two member medians / 5; any missing rating leaves FSC unknown"
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/judge/fsc_test_sft_14B_f0p5.json",
+      "id": "e08.judge.14B.configs",
+      "key": "configs",
+      "value": [
+        "H2_sol_high",
+        "H2_opus55_max"
+      ]
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/judge/fsc_test_sft_14B_f0p5.json",
+      "id": "e08.judge.14B.repeats",
+      "key": "repeats",
+      "value": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/judge/fsc_test_sft_14B_f0p5.json",
+      "id": "e08.judge.14B.rule",
+      "key": "rule",
+      "value": "median of all 3 declared ratings per member, FSC = mean of the two member medians / 5; any missing rating leaves FSC unknown"
+    },
+    {
       "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
       "id": "e05.qwen3-1.7b-base.tasks_measured",
       "key": "models/qwen3-1.7b-base/channels/kernel_binary/all_896/tasks_measured",
@@ -1221,6 +1289,151 @@
       "id": "e25.evaluation_reads_vacuity",
       "key": "scored_response_reads_vacuity()",
       "value": false
+    },
+    {
+      "derivation": "Directory name of the checkpoint that the launch script passes to the trainer as MODEL.",
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at1788/full_run.sh",
+      "id": "e25.start_checkpoint.seeds_0_1",
+      "key": "start_checkpoint()",
+      "value": "step_658_float16"
+    },
+    {
+      "derivation": "Directory name of the checkpoint that the launch script passes to the trainer as MODEL.",
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/results/full_run_at2925/full_run5.sh",
+      "id": "e25.start_checkpoint.seed_2",
+      "key": "start_checkpoint()",
+      "value": "step_658_float16"
+    },
+    {
+      "derivation": "Python file that the lane script starts as the trainer.",
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/code/lane.sh",
+      "id": "e25.trainer_script",
+      "key": "trainer_script()",
+      "value": "train_e25.py"
+    },
+    {
+      "derivation": "Name of the reward function that the experiment 25 analysis applies to each scored cell.",
+      "file": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/code/analyze_e25.py",
+      "id": "e25.strict_function",
+      "key": "strict_function()",
+      "value": "reward_kernel_binary"
+    },
+    {
+      "derivation": "Condition under which the experiment 19 panel loader sets strict success to 1.",
+      "file": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/data_e19.py",
+      "id": "e19.strict_rule",
+      "key": "strict_rule()",
+      "value": "ict == 1.0 and icp == 1.0"
+    },
+    {
+      "derivation": "The `max_num_steps` field of the `sft:` block of a training config.",
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/configs/e08_sft_1.7B.yaml",
+      "id": "e08.1.7B.max_steps",
+      "key": "max_steps()",
+      "value": 658
+    },
+    {
+      "derivation": "Axioms that a kernel-accepted theorem may use, from the module docstring of the rewards.",
+      "file": "src/rl4cv/rewards.py",
+      "id": "kernel_binary.allowed_axioms",
+      "key": "allowed_axioms()",
+      "value": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "derivation": "Conditions that `reward_kernel_binary` joins with `and`, in order.",
+      "file": "src/rl4cv/rewards.py",
+      "id": "kernel_binary.conditions",
+      "key": "kernel_binary_conditions()",
+      "value": [
+        "s.ic_tests == 1.0",
+        "s.n_theorems_stated >= 1",
+        "s.n_theorems_proved == s.n_theorems_stated",
+        "s.vacuous_theorems == 0"
+      ]
+    },
+    {
+      "derivation": "Comment block above the heuristic vacuous-statement screen, on one line.",
+      "file": "src/rl4cv/rewards.py",
+      "id": "rewards.vacuity_screen_comment",
+      "key": "vacuity_screen_comment()",
+      "value": "Heuristic screen for vacuous theorem statements. It is deliberately conservative (it only flags statements whose conclusion is literally True or a syntactic self-equality); the authoritative check should reuse VeriBench's tests/test_reference_specs_nonvacuous.py logic from the pinned checkout."
+    },
+    {
+      "derivation": "Whether the run script builds its scored rows with `rl4cv.veribench.collect`.",
+      "file": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/run_model.sh",
+      "id": "e01.run_uses_collect",
+      "key": "calls_collect()",
+      "value": true
+    },
+    {
+      "derivation": "Whether the run script builds its scored rows with `rl4cv.veribench.collect`.",
+      "file": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/run_model_e05.sh",
+      "id": "e05.run_uses_collect",
+      "key": "calls_collect()",
+      "value": true
+    },
+    {
+      "derivation": "Whether the experiment 08 ladder analysis fills the vacuous-theorem count from a screen.",
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/scripts/analyze_ladder.py",
+      "id": "e08.ladder_sets_vacuity",
+      "key": "ladder_sets_vacuity()",
+      "value": true
+    },
+    {
+      "derivation": "Whether the experiment 08 vacuity screen applies the syntactic `is_vacuous_statement`.",
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/scripts/score_teacher_files.py",
+      "id": "e08.screen_uses_statement_check",
+      "key": "screen_uses_statement_check()",
+      "value": true
+    },
+    {
+      "derivation": "Generation module, thinking mode, and sampler seed of the experiment 08 ladder script.",
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/scripts/run_ladder_e08.sh",
+      "id": "e08.ladder_generation",
+      "key": "ladder_generation()",
+      "value": {
+        "module": "rl4cv.veribench.generate",
+        "seed": 91,
+        "thinking": "on"
+      }
+    },
+    {
+      "derivation": "[agent, requested model] of each FSC judge run on the selected test models.",
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/judge/state.json",
+      "id": "e08.judge.requests",
+      "key": "judge_requests(runs)",
+      "value": {
+        "test_sft_14B_f0p5/H2_opus55_max": [
+          "vb103_judge",
+          "anthropic/claude-opus-5-5-no-fallback"
+        ],
+        "test_sft_14B_f0p5/H2_sol_high": [
+          "vb103_judge",
+          "openai/gpt-6-sol-high"
+        ],
+        "test_sft_8B_f1p0/H2_opus55_max": [
+          "vb103_judge",
+          "anthropic/claude-opus-5-5-no-fallback"
+        ],
+        "test_sft_8B_f1p0/H2_sol_high": [
+          "vb103_judge",
+          "openai/gpt-6-sol-high"
+        ]
+      }
+    },
+    {
+      "derivation": "Requested effort of each judge configuration in the controls check.",
+      "file": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/judge/controls_check.json",
+      "id": "e08.judge.efforts",
+      "key": "judge_efforts(configs)",
+      "value": {
+        "H2_opus55_max": "max",
+        "H2_sol_high": "high"
+      }
     }
   ],
   "files": [
@@ -1334,12 +1547,39 @@
     },
     {
       "license": "Apache-2.0",
+      "media_type": "text/x-shellscript",
+      "path": "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/run_model.sh",
+      "producing_experiment": "01",
+      "producing_run": "expt_v1 model run script",
+      "sha256": "7e1060650988a1daafb8962f9f01fe0d2ec080c2a063b2bcb98b160339eb42c4",
+      "size": 3991
+    },
+    {
+      "license": "Apache-2.0",
       "media_type": "application/json",
       "path": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/results/analysis_e05.json",
       "producing_experiment": "05",
       "producing_run": "expt_v1 analysis",
       "sha256": "c28bdc77fa577fe75a41660db4438325d5addc90bbd4db1cd122a63ab573a77c",
       "size": 31656
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "text/x-shellscript",
+      "path": "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/run_model_e05.sh",
+      "producing_experiment": "05",
+      "producing_run": "expt_v1 model run script",
+      "sha256": "b75377be9607a45d628ac2cdea9b37e46669daa68a3cdd1755493c06d960a9b0",
+      "size": 7532
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "application/yaml",
+      "path": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/configs/e08_sft_1.7B.yaml",
+      "producing_experiment": "08",
+      "producing_run": "expt_v1 1.7B training config",
+      "sha256": "38a1e4e8af3ef3621dd970a257e218c6ac16a7fb2eb7f57a4829b0c5108790ef",
+      "size": 4309
     },
     {
       "license": "Apache-2.0",
@@ -1362,11 +1602,56 @@
     {
       "license": "Apache-2.0",
       "media_type": "application/json",
+      "path": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/judge/controls_check.json",
+      "producing_experiment": "08",
+      "producing_run": "expt_v1 judge controls check",
+      "sha256": "7f8f5fd310399dd1f534152c0997d4ac665b6d5ac370ecdbbbca422ef2293f1c",
+      "size": 3571
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
+      "path": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/judge/fsc_test_sft_14B_f0p5.json",
+      "producing_experiment": "08",
+      "producing_run": "expt_v1 held-out test FSC judging, selected 14B model",
+      "sha256": "d32996e941015b1208413abbd6ef07647a4a3b1579e1e1890a299b12f1f3d69a",
+      "size": 83432
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
+      "path": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/judge/fsc_test_sft_8B_f1p0.json",
+      "producing_experiment": "08",
+      "producing_run": "expt_v1 held-out test FSC judging, selected 8B model",
+      "sha256": "151ea199e7a4545d3aa78975adb42cb0d2b48bdea4fe1cf205f3106df9022bd5",
+      "size": 100157
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
+      "path": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/judge/state.json",
+      "producing_experiment": "08",
+      "producing_run": "expt_v1 judge run state",
+      "sha256": "62b69fd9aa8fa07c41097cd4b5336826d63a64799cebe5e6605b6a1b05e7f687",
+      "size": 29920
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
       "path": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/ladder_manifest.json",
       "producing_experiment": "08",
       "producing_run": "expt_v1 validation ladder manifest",
       "sha256": "3013db1230f27cf021ace50ff53abcc6de2e9f6964ac62968baa80ccb577a948",
       "size": 10226
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "application/json",
+      "path": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/results/parent_training_complete_10-11-2026.json",
+      "producing_experiment": "08",
+      "producing_run": "expt_v1 training completion record 10-11-2026",
+      "sha256": "aee18c6a97386c20c129bede6e5b6111d4638a62a011667fcf7048b860b026ea",
+      "size": 4894
     },
     {
       "license": "Apache-2.0",
@@ -1415,6 +1700,33 @@
     },
     {
       "license": "Apache-2.0",
+      "media_type": "text/x-python",
+      "path": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/scripts/analyze_ladder.py",
+      "producing_experiment": "08",
+      "producing_run": "expt_v1 ladder analysis code",
+      "sha256": "54996b9357cd35bbb9f6dfc93376b17aff7005f1fe61977d6969efbbdb5eb8db",
+      "size": 15511
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "text/x-shellscript",
+      "path": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/scripts/run_ladder_e08.sh",
+      "producing_experiment": "08",
+      "producing_run": "expt_v1 ladder generation script",
+      "sha256": "4d1f89a9bc9f71f03a347d299deda8c2c2cbe449179892f06aedd8f474ac5836",
+      "size": 7716
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "text/x-python",
+      "path": "experiments/08_qwen3_base_matched_lean_sft_opus55_astra_teachers_vbv1_train_val_test/expt_v1/scripts/score_teacher_files.py",
+      "producing_experiment": "08",
+      "producing_run": "expt_v1 teacher-file and vacuity screen code",
+      "sha256": "e77aa53f26a78b64dcb978c874b0336c5f75c7a15656740fde67e29ed5f00000",
+      "size": 26425
+    },
+    {
+      "license": "Apache-2.0",
       "media_type": "application/json",
       "path": "experiments/09_qwen3_1p7b_grpo_scsc_scalar_vs_factor_feedback_vbv1_d013/expt_v1/results/terminal_receipt.json",
       "producing_experiment": "09",
@@ -1430,6 +1742,15 @@
       "producing_run": "expt_v1 analysis code",
       "sha256": "f6b05c257ccdc8d40d5d2ea600be63e24dd4af1546137ad87fb9ec2914bb1521",
       "size": 40162
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "text/x-python",
+      "path": "experiments/19_interpretable_irt_scsc_factors_predict_and_guide_strict_pass1_vbv1_d013/expt_v1/data_e19.py",
+      "producing_experiment": "19",
+      "producing_run": "expt_v1 panel loader",
+      "sha256": "45c0136d9471fe384ed6dcd911df82b0ad0b7d5966a4d5a72e5464af6e1e2d18",
+      "size": 14653
     },
     {
       "license": "Apache-2.0",
@@ -1451,12 +1772,30 @@
     },
     {
       "license": "Apache-2.0",
+      "media_type": "text/x-python",
+      "path": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/code/analyze_e25.py",
+      "producing_experiment": "25",
+      "producing_run": "expt_v1 analysis code",
+      "sha256": "b64dfc0c5fd11ec004994c20c95665c8e8510cf730c866424c67e20b479a528b",
+      "size": 9540
+    },
+    {
+      "license": "Apache-2.0",
       "media_type": "text/x-shellscript",
       "path": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/code/eval_local.sh",
       "producing_experiment": "25",
       "producing_run": "expt_v1 evaluation script",
       "sha256": "40f7400ccb5a2a89b1e6b9f100139ff91f57dec4a9b752e2174e0064b8b70cc2",
       "size": 2261
+    },
+    {
+      "license": "Apache-2.0",
+      "media_type": "text/x-shellscript",
+      "path": "experiments/25_smooth_vs_strict_reward_grpo_qwen3_1p7b_sft_vbv1_3_d013/expt_v1/code/lane.sh",
+      "producing_experiment": "25",
+      "producing_run": "expt_v1 lane script that starts the trainer",
+      "sha256": "755e53d14d1da8b5b68959f24fbd9d328419d555a0e1e5343410bf647a75b49d",
+      "size": 1438
     },
     {
       "license": "Apache-2.0",

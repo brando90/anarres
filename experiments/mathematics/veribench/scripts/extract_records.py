@@ -77,6 +77,23 @@ E25_STATS = _E25 + "code/stats_e20.py"
 E25_EVAL = _E25 + "code/eval_local.sh"
 E25_LAUNCH_S01 = _E25 + "results/full_run_at1788/full_run.sh"
 E25_LAUNCH_S2 = _E25 + "results/full_run_at2925/full_run5.sh"
+E25_LANE = _E25 + "code/lane.sh"
+E25_ANALYZE = _E25 + "code/analyze_e25.py"
+E19_DATA = _E19 + "expt_v1/data_e19.py"
+E01_RUN = (
+    "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/run_model.sh"
+)
+E05_RUN = (
+    "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/run_model_e05.sh"
+)
+E08_TRAINING_DONE = _E08 + "parent_training_complete_10-11-2026.json"
+E08_RUN_LADDER = _E08_RUN + "scripts/run_ladder_e08.sh"
+E08_ANALYZE_LADDER = _E08_RUN + "scripts/analyze_ladder.py"
+E08_SCREEN = _E08_RUN + "scripts/score_teacher_files.py"
+E08_JUDGE_STATE = _E08 + "judge/state.json"
+E08_JUDGE_CONTROLS = _E08 + "judge/controls_check.json"
+E08_JUDGE_FSC = _E08 + "judge/fsc_test_sft_{size}.json"
+E08_JUDGE_SIZES = {"8B": "8B_f1p0", "14B": "14B_f0p5"}
 REWARDS = "src/rl4cv/rewards.py"
 JOBS = "src/rl4cv/veribench/jobs.py"
 
@@ -119,13 +136,29 @@ PRODUCED_BY = {
     E25_EVAL: ("25", "expt_v1 evaluation script"),
     E25_LAUNCH_S01: ("25", "full_run_at1788 launch script, seeds 0 and 1"),
     E25_LAUNCH_S2: ("25", "full_run_at2925 launch script, seed 2"),
+    E25_LANE: ("25", "expt_v1 lane script that starts the trainer"),
+    E25_ANALYZE: ("25", "expt_v1 analysis code"),
+    E19_DATA: ("19", "expt_v1 panel loader"),
+    E01_RUN: ("01", "expt_v1 model run script"),
+    E05_RUN: ("05", "expt_v1 model run script"),
+    E08_TRAINING_DONE: ("08", "expt_v1 training completion record 10-11-2026"),
+    E08_RUN_LADDER: ("08", "expt_v1 ladder generation script"),
+    E08_ANALYZE_LADDER: ("08", "expt_v1 ladder analysis code"),
+    E08_SCREEN: ("08", "expt_v1 teacher-file and vacuity screen code"),
+    E08_JUDGE_STATE: ("08", "expt_v1 judge run state"),
+    E08_JUDGE_CONTROLS: ("08", "expt_v1 judge controls check"),
     E01_NAMESPACE: ("01", "expt_v1 diagnostics 10-07-2026, namespace rewrite"),
     E01_PROBE_FAMILIES: ("01", "expt_v1 probe summary per benchmark family"),
     REWARDS: ("shared", "rl4cv package reward definitions"),
     JOBS: ("shared", "rl4cv package scorer-row reader"),
 }
-for _size in ("8B", "14B"):
+for _size in ("1.7B", "8B", "14B"):
     PRODUCED_BY[E08_CONFIG.format(size=_size)] = ("08", f"expt_v1 {_size} training config")
+for _size, _label in E08_JUDGE_SIZES.items():
+    PRODUCED_BY[E08_JUDGE_FSC.format(size=_label)] = (
+        "08",
+        f"expt_v1 held-out test FSC judging, selected {_size} model",
+    )
 
 # Each figure: (id, source file, key path inside the JSON file).
 FIGURES: list[tuple[str, str, tuple]] = [
@@ -343,6 +376,20 @@ FIGURES += [
     ("e25.u0.samples", E25, ("runs", "u0", "samples_scored")),
     ("e25.u48.samples", E25, ("runs", "A_s0_u048", "samples_scored")),
 ]
+FIGURES += [
+    ("e08.training.precision", E08_TRAINING_DONE, ("recipe", "precision")),
+    ("e08.training.nemo_revision", E08_TRAINING_DONE, ("pins", "nemo_revision")),
+    ("e08.judge.identity_evidence", E08_JUDGE_CONTROLS, ("identity_evidence",)),
+]
+for _size, _label in E08_JUDGE_SIZES.items():
+    for _field in ("configs", "repeats", "rule"):
+        FIGURES.append(
+            (
+                f"e08.judge.{_size}.{_field}",
+                E08_JUDGE_FSC.format(size=_label),
+                (_field,),
+            )
+        )
 for _model in ("qwen3-1.7b-base", "qwen3-4b-base", "qwen3-8b-base"):
     FIGURES.append(
         (
@@ -459,6 +506,91 @@ def scored_response_reads_vacuity(text: str) -> bool:
     return "vacuous" in body
 
 
+def start_checkpoint(text: str) -> str:
+    """Directory name of the checkpoint that the launch script passes to the trainer as MODEL."""
+    return _one(r"\bMODEL=\$R/ckpt/(\S+)", text)
+
+
+def trainer_script(text: str) -> str:
+    """Python file that the lane script starts as the trainer."""
+    return _one(r"\$T/(\w+\.py) --arm", text)
+
+
+def strict_function(text: str) -> str:
+    """Name of the reward function that the experiment 25 analysis applies to each scored cell."""
+    return _one(r"r = float\((\w+)\(scored_response\(row, gen\)\)\)", text)
+
+
+def strict_rule(text: str) -> str:
+    """Condition under which the experiment 19 panel loader sets strict success to 1."""
+    return _one(r"strict\[i, j\] = float\((.*)\)$", text)
+
+
+def allowed_axioms(text: str) -> list[str]:
+    """Axioms that a kernel-accepted theorem may use, from the module docstring of the rewards."""
+    found = _one(r"kernel axioms stay within \{([^}]*)\}", text)
+    return [name.strip() for name in found.split(",")]
+
+
+def kernel_binary_conditions(text: str) -> list[str]:
+    """Conditions that `reward_kernel_binary` joins with `and`, in order."""
+    body = text[text.index("def reward_kernel_binary(") :]
+    expression = body[body.index("ok = (") + len("ok = (") : body.index("\n    )")]
+    return [part.strip() for part in re.split(r"\band\b", expression)]
+
+
+def vacuity_screen_comment(text: str) -> str:
+    """Comment block above the heuristic vacuous-statement screen, on one line."""
+    block = re.search(r"^# Heuristic screen.*?\n(?:#.*\n)+", text, flags=re.MULTILINE)
+    if block is None:
+        raise ValueError("no heuristic screen comment")
+    return " ".join(line.lstrip("# ").strip() for line in block[0].splitlines())
+
+
+def calls_collect(text: str) -> bool:
+    """Whether the run script builds its scored rows with `rl4cv.veribench.collect`."""
+    return "rl4cv.veribench.collect" in text
+
+
+def ladder_sets_vacuity(text: str) -> bool:
+    """Whether the experiment 08 ladder analysis fills the vacuous-theorem count from a screen."""
+    return "from score_teacher_files import vacuity" in text and "vacuous_theorems=n_vac" in text
+
+
+def screen_uses_statement_check(text: str) -> bool:
+    """Whether the experiment 08 vacuity screen applies the syntactic `is_vacuous_statement`."""
+    return "from rl4cv.rewards import is_vacuous_statement" in text and "is_vacuous_statement(t)" in text
+
+
+def ladder_generation(text: str) -> dict[str, object]:
+    """Generation module, thinking mode, and sampler seed of the experiment 08 ladder script."""
+    return {
+        "module": _one(r"-m (rl4cv\.veribench\.generate)", text),
+        "thinking": _one(r"--thinking (\w+)", text),
+        "seed": int(_one(r"--seed (\d+)", text)),
+    }
+
+
+def max_steps(text: str) -> int:
+    """The `max_num_steps` field of the `sft:` block of a training config."""
+    return int(_one(r"^sft:\n(?:  .*\n)*?  max_num_steps: (\d+)$", text))
+
+
+def judge_requests(runs: dict[str, dict]) -> dict[str, list[str]]:
+    """[agent, requested model] of each FSC judge run on the selected test models."""
+    found = {}
+    for name in sorted(runs):
+        if name.startswith(("test_sft_8B_f1p0/", "test_sft_14B_f0p5/")):
+            command = runs[name]["command"]
+            found[name] = [command[command.index(flag) + 1] for flag in ("--agent", "--model")]
+    return found
+
+
+def judge_efforts(configs: dict[str, dict]) -> dict[str, str]:
+    """Requested effort of each judge configuration in the controls check."""
+    return {name: configs[name]["expected_envelope"]["effort"] for name in sorted(configs)}
+
+
 # Derived figures: (id, source file, key path of the input, function of the input).
 DERIVED = [
     (
@@ -496,6 +628,22 @@ DERIVED = [
     ("e25.trainer_dtype.seed_2", E25_LAUNCH_S2, (), trainer_dtype),
     ("kernel_binary.definition", REWARDS, (), kernel_binary_definition),
     ("e25.evaluation_reads_vacuity", JOBS, (), scored_response_reads_vacuity),
+    ("e25.start_checkpoint.seeds_0_1", E25_LAUNCH_S01, (), start_checkpoint),
+    ("e25.start_checkpoint.seed_2", E25_LAUNCH_S2, (), start_checkpoint),
+    ("e25.trainer_script", E25_LANE, (), trainer_script),
+    ("e25.strict_function", E25_ANALYZE, (), strict_function),
+    ("e19.strict_rule", E19_DATA, (), strict_rule),
+    ("e08.1.7B.max_steps", E08_CONFIG.format(size="1.7B"), (), max_steps),
+    ("kernel_binary.allowed_axioms", REWARDS, (), allowed_axioms),
+    ("kernel_binary.conditions", REWARDS, (), kernel_binary_conditions),
+    ("rewards.vacuity_screen_comment", REWARDS, (), vacuity_screen_comment),
+    ("e01.run_uses_collect", E01_RUN, (), calls_collect),
+    ("e05.run_uses_collect", E05_RUN, (), calls_collect),
+    ("e08.ladder_sets_vacuity", E08_ANALYZE_LADDER, (), ladder_sets_vacuity),
+    ("e08.screen_uses_statement_check", E08_SCREEN, (), screen_uses_statement_check),
+    ("e08.ladder_generation", E08_RUN_LADDER, (), ladder_generation),
+    ("e08.judge.requests", E08_JUDGE_STATE, ("runs",), judge_requests),
+    ("e08.judge.efforts", E08_JUDGE_CONTROLS, ("configs",), judge_efforts),
 ]
 
 

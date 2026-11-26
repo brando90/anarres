@@ -263,11 +263,65 @@ def audit_numbers(records: dict, readme: str) -> None:
         " proved, none vacuous.",
         "the kernel_binary reward keeps its definition",
     )
+    axioms = g["kernel_binary.allowed_axioms"]
+    require(
+        axioms == ["propext", "Classical.choice", "Quot.sound"],
+        "the rewards restrict kernel axioms to propext, Classical.choice, and Quot.sound",
+    )
     states(
         "outcomes",
-        "`kernel_binary` is 1 only for a fully verified file, one that typechecks, has an example,"
-        " states at least one theorem, proves every stated theorem, and has no vacuous theorem",
+        "IC_proofs is the fraction of stated theorems that the Lean kernel accepts with axioms"
+        f" restricted to {series([f'`{name}`' for name in axioms])}",
+        "rl4cv rewards docstring",
+    )
+    require(
+        g["kernel_binary.conditions"]
+        == [
+            "s.ic_tests == 1.0",
+            "s.n_theorems_stated >= 1",
+            "s.n_theorems_proved == s.n_theorems_stated",
+            "s.vacuous_theorems == 0",
+        ],
+        "kernel_binary joins typechecking with an example, a theorem, all proved, and zero vacuity",
+    )
+    states(
+        "outcomes",
+        "`kernel_binary` is 1 when the extracted file typechecks, has an example, states at least"
+        " one theorem, every stated theorem is proved with those axioms only, and the recorded"
+        " vacuous-theorem count is zero",
         "rl4cv rewards",
+    )
+    require(
+        g["e01.run_uses_collect"] and g["e05.run_uses_collect"] and not g["e25.evaluation_reads_vacuity"],
+        "experiments 01, 05, and 25 build rows with a reader that leaves the vacuity count at zero",
+    )
+    require(
+        g["e08.ladder_sets_vacuity"]
+        and g["e08.screen_uses_statement_check"]
+        and "literally True or a syntactic self-equality" in g["rewards.vacuity_screen_comment"],
+        "experiment 08 fills the vacuity count with the syntactic statement screen",
+    )
+    states(
+        "outcomes",
+        "Experiments 01, 05, and 25 read scorer rows without setting it, so it stays zero there,"
+        " and experiment 08 fills it with a syntactic screen that flags a theorem whose conclusion"
+        " is literally `True` or a self-equality. A `kernel_binary` value of 1 therefore does not"
+        " establish that a theorem is non-vacuous.",
+        "scorer-row reader and experiment 08 screen",
+    )
+    require(
+        g["e19.strict_rule"] == "ict == 1.0 and icp == 1.0",
+        "experiment 19 strict success is IC_tests = 1 and IC_proofs = 1",
+    )
+    require(
+        g["e25.strict_function"] == "reward_kernel_binary",
+        "experiment 25 strict success is the kernel_binary reward of each scored cell",
+    )
+    states(
+        "outcomes",
+        "Experiment 19 reports strict success, which is 1 when IC_tests and IC_proofs both equal 1."
+        " Experiment 25 reports strict success as the `kernel_binary` value of each scored cell.",
+        "e19 panel loader and e25 analysis",
     )
     states("outcomes", "Neither `kernel_binary` nor strict success includes FSC", "definitions")
     states("outcomes", "A group is the eight responses sampled for one task", "G = 8")
@@ -481,7 +535,59 @@ def audit_numbers(records: dict, readme: str) -> None:
     )
     seeds = {g["e08.8B.training_seed"], g["e08.14B.training_seed"]}
     require(len(seeds) == 1, "the selected 8B and 14B configs share one training seed")
-    states("08", f"One training run per size, with training seed {seeds.pop()}", "e08 configs")
+    states("08", f"one training run per size, with training seed {seeds.pop()}", "e08 configs")
+    revision = g["e08.training.nemo_revision"][:8]
+    require(g["e08.training.precision"] == "bf16", "experiment 08 trained in bf16")
+    states(
+        "08",
+        f"trained by supervised fine-tuning in bf16 with NeMo RL at revision `{revision}`",
+        "e08 training completion record",
+    )
+    generation = g["e08.ladder_generation"]
+    require(
+        generation["module"] == "rl4cv.veribench.generate" and generation["thinking"] == "on",
+        "experiment 08 generates through rl4cv.veribench.generate with thinking on",
+    )
+    states(
+        "08",
+        f"Evaluation used `{generation['module']}` with thinking {generation['thinking']} and"
+        f" sampler seed {generation['seed']}",
+        "e08 ladder script",
+    )
+    requests = g["e08.judge.requests"]
+    efforts = g["e08.judge.efforts"]
+    require(
+        len(requests) == 4
+        and {tuple(request) for request in requests.values()}
+        == {
+            ("vb103_judge", "anthropic/claude-opus-5-5-no-fallback"),
+            ("vb103_judge", "openai/gpt-6-sol-high"),
+        }
+        and efforts == {"H2_opus55_max": "max", "H2_sol_high": "high"},
+        "both selected-model FSC runs request Sol at high effort and Opus 5.5 at max effort",
+    )
+    for size in ("8B", "14B"):
+        require(
+            sorted(g[f"e08.judge.{size}.configs"]) == ["H2_opus55_max", "H2_sol_high"]
+            and g[f"e08.judge.{size}.repeats"] == [1, 2, 3]
+            and "median of all 3 declared ratings per member" in g[f"e08.judge.{size}.rule"]
+            and "mean of the two member medians / 5" in g[f"e08.judge.{size}.rule"],
+            f"the {size} FSC is the mean of two judges' medians of three ratings, divided by five",
+        )
+    require(
+        "provider-returned model/effort fields are unavailable"
+        in g["e08.judge.identity_evidence"],
+        "the judge identity evidence is a request envelope and receipt, not returned fields",
+    )
+    states(
+        "08",
+        "FSC came from the `vb103_judge` agent, which requested GPT-6 Sol at high effort and Claude"
+        " Opus 5.5 at max effort, with three ratings per judge. FSC is the mean of the two judges'"
+        " median ratings divided by five. The judge identities are as requested: the validated"
+        " bundle holds the frozen request envelope and a no-fallback receipt, and the"
+        " provider-returned model and effort fields are unavailable.",
+        "e08 judge state and controls",
+    )
     rungs = set(g["e08.validation.trained_checkpoints_per_size"].values())
     require(len(rungs) == 1, "every size has the same number of trained checkpoints")
     states(
@@ -539,11 +645,21 @@ def audit_numbers(records: dict, readme: str) -> None:
         "e19 AUC",
     )
     require(g["e19.auc_irt_2pl"] > g["e19.auc_gate"], "the IRT AUC is above the gate")
+    require(
+        keys["e19.auc_irt_minus_panel_strict_rate"].endswith(
+            "q8_irt_2pl_minus_panel_strict_rate/estimate"
+        )
+        and keys["e19.auc_irt_minus_panel_strict_rate_ci95"].endswith(
+            "q8_irt_2pl_minus_panel_strict_rate/ci95"
+        ),
+        "the contrast is the IRT AUC minus the AUC of ranking by the panel strict pass rate",
+    )
     states(
         "19",
-        f"{g['e19.auc_irt_minus_panel_strict_rate']:+.3f}"
+        "Its AUC margin over ranking by the panel strict pass rate is"
+        f" {g['e19.auc_irt_minus_panel_strict_rate']:+.3f}"
         f" {interval(g['e19.auc_irt_minus_panel_strict_rate_ci95'], 3, sign=True)}",
-        "e19 margin over the panel pass rate",
+        "e19 margin over the panel strict pass rate",
     )
     low_bound, high_bound = g["e19.auc_irt_minus_panel_strict_rate_ci95"]
     require(low_bound < 0 < high_bound, "the margin over the panel pass rate spans zero")
@@ -574,7 +690,7 @@ def audit_numbers(records: dict, readme: str) -> None:
     systems = len(g["e19.systems"])
     states(
         "19",
-        f"The second endpoint uses {g['e19.strict.cells']:,} validation outcomes from {systems}"
+        f"The second endpoint uses {g['e19.strict.cells']:,} measured system-task outcomes from {systems}"
         " systems in leave-one-system-out prediction",
         "e19 E1 strict cells and panel systems",
     )
@@ -601,6 +717,28 @@ def audit_numbers(records: dict, readme: str) -> None:
         g["e25.u0.cells"] == g["e25.tasks"] * g["e25.u0.samples"]
         and g["e25.u48.cells_per_run"] == g["e25.tasks"] * g["e25.u48.samples"],
         "cells are tasks times samples at both updates",
+    )
+    checkpoint = g["e25.start_checkpoint.seeds_0_1"]
+    step = re.fullmatch(r"step_(\d+)_float16", checkpoint)
+    require(
+        step is not None
+        and checkpoint == g["e25.start_checkpoint.seed_2"]
+        and int(step[1]) == g["e08.1.7B.max_steps"],  # type: ignore[index]
+        "every seed starts from the float16 copy of the experiment 08 1.7B final-step checkpoint",
+    )
+    folder = re.search(r"/experiments/25_[^/]*?_qwen3_(\d+)p(\d+)b_", text["25"])
+    require(folder is not None, "the experiment 25 link names the Qwen3 size of its folder")
+    states(
+        "25",
+        f"on the Qwen3-{folder[1]}.{folder[2]}B Lean fine-tuned model (experiment 08 step"  # type: ignore[index]
+        f" {step[1]}), {number_word(3)} seeds per arm",  # type: ignore[index]
+        "e25 launch scripts, e08 1.7B config, and experiment folder",
+    )
+    states(
+        "25",
+        f"The harness is `{g['e25.trainer_script']}` started from the starting checkpoint"
+        f" `{checkpoint}`",
+        "e25 lane script and launch scripts",
     )
     states(
         "25",

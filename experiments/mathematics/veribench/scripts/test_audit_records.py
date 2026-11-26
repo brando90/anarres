@@ -109,7 +109,7 @@ class AuditFailsOnChangedInput(unittest.TestCase):
             ("guarded counterfactual was not recompiled", "guarded counterfactual was recompiled"),
             # Item 4: outcome definitions and the experiment 25 harness.
             (", with FSC counted as 0 when IC_tests is 0", ""),
-            (", and has no vacuous theorem", ""),
+            (", and the recorded vacuous-theorem count is zero", ""),
             ("were kernel-scored", "were scored"),
             ("No DT (differential testing). ", ""),
             ("does not include formal specification coverage", "includes coverage"),
@@ -123,7 +123,7 @@ class AuditFailsOnChangedInput(unittest.TestCase):
             ("and condition on the fitted models", "and refit the models"),
             # Item 6: the forecast policy and the second endpoint.
             ("`sft_4B_f1p0`", "`sft_8B_f1p0`"),
-            ("1,308 validation outcomes", "1,309 validation outcomes"),
+            ("1,308 measured system-task outcomes", "1,309 measured system-task outcomes"),
             ("from 11 systems", "from 12 systems"),
             # Item 7: probe tasks per benchmark family.
             ("(up to 4 per benchmark family)", "(4 per split)"),
@@ -152,6 +152,63 @@ class AuditFailsOnChangedInput(unittest.TestCase):
             with self.subTest(change=old):
                 self.setUp()
                 self.edit_readme(old, new)
+                self.assert_fails()
+
+    def test_model_checkpoint_harness_and_definitions_are_tied(self) -> None:
+        """The counterexamples of the 11-26-2026 review, each of which the earlier audit accepted,
+        and the statements added with the fixes."""
+        for old, new in (
+            ("(experiment 08 step 658)", "(experiment 08 step 659)"),
+            ("on the Qwen3-1.7B Lean", "on the Qwen3-8B Lean"),
+            ("The harness is `train_e25.py`", "The harness is `train_other.py`"),
+            ("starting checkpoint `step_658_float16`", "starting checkpoint `step_659_float16`"),
+            (
+                "strict success as the `kernel_binary` value",
+                "strict success as the `proof_fraction` value",
+            ),
+            ("IC_proofs both equal 1", "IC_proofs both equal 0"),
+            (
+                "Its AUC margin over ranking by the panel strict pass rate",
+                "Its AUC margin over the features-only predictor",
+            ),
+            (
+                "`propext`, `Classical.choice`, and `Quot.sound`",
+                "`propext` and `Classical.choice`",
+            ),
+            (
+                "and the recorded vacuous-theorem count is zero",
+                "and has no vacuous theorem",
+            ),
+            ("so it stays zero there, and experiment 08 fills it", "so it is filled there, and experiment 08 fills it"),
+            ("at revision `c751f811`", "at revision `c751f812`"),
+            ("thinking on and sampler seed 91", "thinking off and sampler seed 91"),
+            ("GPT-6 Sol at high effort", "GPT-6 Sol at max effort"),
+            ("with three ratings per judge", "with five ratings per judge"),
+            ("median ratings divided by five", "median ratings divided by four"),
+            ("and a no-fallback receipt", "and returned model fields"),
+        ):
+            with self.subTest(change=old):
+                self.setUp()
+                self.edit_readme(old, new)
+                self.assert_fails()
+
+    def test_changed_definition_record_is_checked(self) -> None:
+        for figure_id, value in (
+            ("e25.strict_function", "reward_proof_fraction"),
+            ("e19.strict_rule", "ict == 0.0 and icp == 0.0"),
+            ("e25.trainer_script", "train_other.py"),
+            ("e25.start_checkpoint.seed_2", "step_659_float16"),
+            ("kernel_binary.allowed_axioms", ["propext"]),
+        ):
+            with self.subTest(figure=figure_id):
+                self.setUp()
+
+                def change(records: dict, name=figure_id, new=value) -> None:
+                    for figure in records["figures"]:
+                        if figure["id"] == name:
+                            figure["value"] = new
+
+                self.edit_records(change)
                 self.assert_fails()
 
     def test_statement_in_another_row_is_rejected(self) -> None:
