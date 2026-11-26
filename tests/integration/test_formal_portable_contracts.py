@@ -19,6 +19,8 @@ CONTRACTS = importlib.import_module("anarres_formal_adapter.contracts")
 FIXTURE = importlib.import_module("anarres_formal_adapter.fixture")
 VERO = importlib.import_module("anarres_formal_adapter.vero_drivers")
 POLICY_REVISION = "sha256:" + "1" * 64
+# Bound each fixture command child. A child that reaches this limit fails the FIFO tests.
+FIFO_TIMEOUT_SECONDS = 10
 
 
 class PortableFormalContractsTest(unittest.TestCase):
@@ -246,6 +248,94 @@ class PortableFormalContractsTest(unittest.TestCase):
             self.assertRaisesRegex(ValueError, "hard link"),
         ):
             self.plan()
+
+    def replace_with_fifo(self, relative: str) -> None:
+        path = self.root / relative
+        path.unlink()
+        try:
+            os.mkfifo(path)
+        except OSError as error:
+            self.skipTest(f"FIFO support is unavailable: {error}")
+
+    def assert_fifo_rejected_without_blocking(self, relative: str) -> None:
+        """Run qualification and dry-run planning in children that block if they open the FIFO."""
+        self.replace_with_fifo(relative)
+        manifest = self.root / "anarres.toml"
+        manifest.write_text(
+            'schema_version = "anarres.environment-source.v1"\n'
+            'environment_id = "fixture"\n'
+            'domain = "formal-verification"\n'
+            'adapter = "formal-fixture"\n'
+            'adapter_version = "0.2.0"\n'
+            f'native_format = "{FIXTURE.FORMAT}"\n\n'
+            "[source]\n"
+            'uri = "."\n'
+            f'revision = "{self.source.revision}"\n'
+            f'license = "{self.source.license}"\n',
+            encoding="utf-8",
+        )
+        output = Path(self.directory.name) / "plan.json"
+        environment = {
+            **os.environ,
+            "PYTHONPATH": os.pathsep.join((str(ROOT / "packages/core/src"), str(FORMAL_SRC))),
+        }
+        commands = {
+            "qualification": ("qualify-source", "--manifest", str(manifest), "--json"),
+            "dry-run planning": (
+                "probe-source",
+                "--manifest",
+                str(manifest),
+                "--policy",
+                "fixture-policy",
+                "--policy-revision",
+                POLICY_REVISION,
+                "--output",
+                str(output),
+                "--dry-run",
+            ),
+        }
+        for label, arguments in commands.items():
+            with self.subTest(command=label):
+                try:
+                    completed = subprocess.run(
+                        [sys.executable, "-m", "anarres_formal_adapter.fixture_cli", *arguments],
+                        capture_output=True,
+                        text=True,
+                        check=False,
+                        cwd=self.directory.name,
+                        env=environment,
+                        timeout=FIFO_TIMEOUT_SECONDS,
+                    )
+                except subprocess.TimeoutExpired:
+                    # subprocess.run has killed the child. The timeout fails this subtest.
+                    self.fail(
+                        f"{label} was still running after {FIFO_TIMEOUT_SECONDS} seconds "
+                        f"with a FIFO at {relative}"
+                    )
+                self.assertEqual(completed.returncode, 1, completed.stderr)
+                self.assertEqual(completed.stdout, "")
+                self.assertEqual(completed.stderr, "error: artifact path is not a regular file\n")
+        self.assertFalse(output.exists())
+
+    @unittest.skipUnless(hasattr(os, "mkfifo"), "FIFO support is unavailable")
+    def test_fifo_development_artifact_is_rejected_without_blocking(self) -> None:
+        self.assert_fifo_rejected_without_blocking("development/a.txt")
+
+    @unittest.skipUnless(hasattr(os, "mkfifo"), "FIFO support is unavailable")
+    def test_fifo_fixture_json_is_rejected_without_blocking(self) -> None:
+        self.assert_fifo_rejected_without_blocking("fixture.json")
+
+    @unittest.skipUnless(hasattr(os, "mkfifo"), "FIFO support is unavailable")
+    def test_contained_file_checks_fifo_metadata_without_opening(self) -> None:
+        self.replace_with_fifo("development/a.txt")
+        refuse = mock.Mock(side_effect=AssertionError("contained_file opened the FIFO"))
+        with (
+            mock.patch("builtins.open", refuse),
+            mock.patch("io.open", refuse),
+            mock.patch("os.open", refuse),
+            self.assertRaisesRegex(ValueError, "not a regular file"),
+        ):
+            CONTRACTS.contained_file(self.root, "development/a.txt")
 
     def test_plan_never_opens_held_out_tasks_or_calls_network_processes_or_runner(self) -> None:
         held_out = self.root / "held-out/sealed.txt"

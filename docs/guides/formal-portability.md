@@ -120,7 +120,10 @@ by this tutorial.
 
 Qualification rejects a task file with more than one hard link, so a
 hard-linked checkout (for example a `cp -al` copy) is rejected, and its path
-checks run before the read rather than on the open file.
+checks run before the read rather than on the open file. It also requires
+`fixture.json` and each development task file to be a regular file. This
+check uses file metadata alone, so a FIFO in either place is rejected without
+being opened.
 
 The Vero source and runtime path remain available through `anarres formal`.
 General driver discovery, real policy execution, and Dafny, Verus, and Rocq

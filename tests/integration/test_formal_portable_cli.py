@@ -12,17 +12,109 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-BINARY = ROOT / "target/debug/anarres"
 sys.path.insert(0, str(ROOT / "data/formal-verification/vero/src"))
 CONTRACTS = importlib.import_module("anarres_formal_adapter.contracts")
+
+
+def build_cli(checkout: Path, environment: dict[str, str]) -> Path:
+    """Build anarres-cli and return the anarres executable that Cargo reports.
+
+    CARGO_TARGET_DIR and other Cargo settings can place the executable outside
+    target/debug, where a binary from another revision may remain.
+    """
+    built = subprocess.run(
+        ["cargo", "build", "--quiet", "--message-format=json", "-p", "anarres-cli"],
+        cwd=checkout,
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    messages = [json.loads(line) for line in built.stdout.splitlines() if line.startswith("{")]
+    if built.returncode != 0:
+        diagnostics = "".join(
+            message["message"].get("rendered") or ""
+            for message in messages
+            if message.get("reason") == "compiler-message"
+        )
+        raise AssertionError(f"cargo build failed\n{diagnostics}{built.stderr}")
+    manifest = (checkout / "crates/anarres-cli/Cargo.toml").resolve()
+    executables = [
+        Path(message["executable"])
+        for message in messages
+        if message.get("reason") == "compiler-artifact"
+        and Path(message["manifest_path"]).resolve() == manifest
+        and message["target"]["name"] == "anarres"
+        and message["target"]["kind"] == ["bin"]
+        and message["executable"]
+    ]
+    if len(executables) != 1:
+        raise AssertionError(f"Cargo reported {len(executables)} anarres executables")
+    return executables[0]
+
+
+def run_cli(
+    binary: Path, arguments: tuple[str, ...], cwd: Path, environment: dict[str, str]
+) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [str(binary), *arguments],
+        cwd=cwd,
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+
+@unittest.skipUnless(os.name == "posix", "executable wrappers require POSIX")
+class CargoExecutableSelectionTest(unittest.TestCase):
+    def test_stale_default_executable_cannot_mask_a_broken_current_build(self) -> None:
+        # Real Cargo builds a minimal anarres-cli package into CARGO_TARGET_DIR while an
+        # executable from an earlier default build remains at target/debug/anarres.
+        with tempfile.TemporaryDirectory(prefix="formal-cargo-") as directory:
+            checkout = Path(directory) / "checkout"
+            package = checkout / "crates/anarres-cli"
+            (package / "src").mkdir(parents=True)
+            (checkout / "Cargo.toml").write_text(
+                '[workspace]\nmembers = ["crates/anarres-cli"]\nresolver = "2"\n',
+                encoding="utf-8",
+            )
+            (package / "Cargo.toml").write_text(
+                '[package]\nname = "anarres-cli"\nversion = "0.0.0"\nedition = "2021"\n'
+                'publish = false\n\n[[bin]]\nname = "anarres"\npath = "src/main.rs"\n',
+                encoding="utf-8",
+            )
+            # The current source builds an anarres executable that fails every command.
+            (package / "src/main.rs").write_text(
+                'fn main() {\n    eprintln!("current build is broken");\n'
+                "    std::process::exit(3);\n}\n",
+                encoding="utf-8",
+            )
+            # An executable from an earlier default build succeeds for every command.
+            stale = checkout / "target/debug/anarres"
+            stale_script = "#!/bin/sh\nexit 0\n"
+            stale.parent.mkdir(parents=True)
+            stale.write_text(stale_script, encoding="utf-8")
+            stale.chmod(stale.stat().st_mode | stat.S_IXUSR)
+            target = Path(directory) / "configured-target"
+            environment = {**os.environ, "CARGO_TARGET_DIR": str(target)}
+            arguments = ("adapter", "doctor", "formal", "--json")
+            self.assertEqual(run_cli(stale, arguments, checkout, environment).returncode, 0)
+
+            binary = build_cli(checkout, environment)
+            self.assertTrue(binary.resolve().is_relative_to(target.resolve()), binary)
+            self.assertEqual(stale.read_text(encoding="utf-8"), stale_script)
+            result = run_cli(binary, arguments, checkout, environment)
+            self.assertEqual((result.returncode, result.stderr), (3, "current build is broken\n"))
 
 
 @unittest.skipUnless(os.name == "posix", "executable wrappers require POSIX")
 class FormalPortableCliTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        # Always build so a binary left from another revision cannot decide the result.
-        subprocess.run(["cargo", "build", "--quiet", "-p", "anarres-cli"], cwd=ROOT, check=True)
+        # Always build, then run the executable Cargo reports. Neither a binary left from
+        # another revision nor a configured target directory can decide the result.
+        cls.binary = build_cli(ROOT, dict(os.environ))
 
     def test_outside_checkout_init_inspect_qualify_dry_run(self) -> None:
         with tempfile.TemporaryDirectory(prefix="formal-portable-") as directory:
@@ -50,14 +142,7 @@ class FormalPortableCliTest(unittest.TestCase):
             }
 
             def run(*arguments: str, ok: bool = True) -> subprocess.CompletedProcess[str]:
-                result = subprocess.run(
-                    [str(BINARY), *arguments],
-                    cwd=outside,
-                    env=environment,
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                )
+                result = run_cli(self.binary, arguments, outside, environment)
                 if ok:
                     self.assertEqual(result.returncode, 0, result.stderr)
                 else:

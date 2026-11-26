@@ -110,8 +110,9 @@ unsafe features, and neither Vero driver performs leakage checks.
 
 An artifact reference binds its URI, SHA-256 digest, media type, size,
 license, and producing run. Local task paths must be canonical relative paths
-within the declared source. The fixture rejects parent traversal, symlinks,
-and hard links before reading task files. Credentials, machine-specific paths,
+within the declared source. Before reading `fixture.json` or a task file, the
+fixture rejects parent traversal, symlinks, hard links, and file types other
+than regular files, such as FIFOs. Credentials, machine-specific paths,
 and protected task contents stay outside repository records.
 
 Keep six evidence states separate:

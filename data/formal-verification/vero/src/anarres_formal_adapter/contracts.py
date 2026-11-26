@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import stat
 from dataclasses import asdict, dataclass
 from importlib.resources import files
 from pathlib import Path, PurePosixPath
@@ -87,7 +88,11 @@ def contained_file(root: Path, relative: str) -> Path:
             raise ValueError("artifact path uses a symlink")
     if not path.resolve().is_relative_to(root.resolve()):
         raise ValueError("artifact path escapes its source")
-    if path.stat().st_nlink != 1:
+    # Classify the path from its metadata alone. Opening a FIFO blocks until a writer appears.
+    metadata = path.lstat()
+    if not stat.S_ISREG(metadata.st_mode):
+        raise ValueError("artifact path is not a regular file")
+    if metadata.st_nlink != 1:
         raise ValueError("artifact path uses a hard link")
     return path
 
