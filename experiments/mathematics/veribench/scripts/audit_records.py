@@ -292,7 +292,9 @@ def audit_numbers(records: dict, readme: str) -> None:
         "rl4cv rewards",
     )
     require(
-        g["e01.run_uses_collect"] and g["e05.run_uses_collect"] and not g["e25.evaluation_reads_vacuity"],
+        g["e01.run_uses_collect"]
+        and g["e05.run_uses_collect"]
+        and not g["e25.evaluation_reads_vacuity"],
         "experiments 01, 05, and 25 build rows with a reader that leaves the vacuity count at zero",
     )
     require(
@@ -575,8 +577,7 @@ def audit_numbers(records: dict, readme: str) -> None:
             f"the {size} FSC is the mean of two judges' medians of three ratings, divided by five",
         )
     require(
-        "provider-returned model/effort fields are unavailable"
-        in g["e08.judge.identity_evidence"],
+        "provider-returned model/effort fields are unavailable" in g["e08.judge.identity_evidence"],
         "the judge identity evidence is a request envelope and receipt, not returned fields",
     )
     states(
@@ -690,8 +691,8 @@ def audit_numbers(records: dict, readme: str) -> None:
     systems = len(g["e19.systems"])
     states(
         "19",
-        f"The second endpoint uses {g['e19.strict.cells']:,} measured system-task outcomes from {systems}"
-        " systems in leave-one-system-out prediction",
+        f"The second endpoint uses {g['e19.strict.cells']:,} measured system-task outcomes from"
+        f" {systems} systems in leave-one-system-out prediction",
         "e19 E1 strict cells and panel systems",
     )
     draws, note = g["e19.bootstrap_note"]

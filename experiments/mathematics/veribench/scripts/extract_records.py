@@ -80,12 +80,8 @@ E25_LAUNCH_S2 = _E25 + "results/full_run_at2925/full_run5.sh"
 E25_LANE = _E25 + "code/lane.sh"
 E25_ANALYZE = _E25 + "code/analyze_e25.py"
 E19_DATA = _E19 + "expt_v1/data_e19.py"
-E01_RUN = (
-    "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/run_model.sh"
-)
-E05_RUN = (
-    "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/run_model_e05.sh"
-)
+E01_RUN = "experiments/01_small_open_models_veribench_v1_single_call_baseline/expt_v1/run_model.sh"
+E05_RUN = "experiments/05_qwen3_base_models_vbv1_g8_pass_signal_sft_derisk/expt_v1/run_model_e05.sh"
 E08_TRAINING_DONE = _E08 + "parent_training_complete_10-11-2026.json"
 E08_RUN_LADDER = _E08_RUN + "scripts/run_ladder_e08.sh"
 E08_ANALYZE_LADDER = _E08_RUN + "scripts/analyze_ladder.py"
@@ -559,7 +555,10 @@ def ladder_sets_vacuity(text: str) -> bool:
 
 def screen_uses_statement_check(text: str) -> bool:
     """Whether the experiment 08 vacuity screen applies the syntactic `is_vacuous_statement`."""
-    return "from rl4cv.rewards import is_vacuous_statement" in text and "is_vacuous_statement(t)" in text
+    return (
+        "from rl4cv.rewards import is_vacuous_statement" in text
+        and "is_vacuous_statement(t)" in text
+    )
 
 
 def ladder_generation(text: str) -> dict[str, object]:

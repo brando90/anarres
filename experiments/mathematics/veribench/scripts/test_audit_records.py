@@ -179,7 +179,10 @@ class AuditFailsOnChangedInput(unittest.TestCase):
                 "and the recorded vacuous-theorem count is zero",
                 "and has no vacuous theorem",
             ),
-            ("so it stays zero there, and experiment 08 fills it", "so it is filled there, and experiment 08 fills it"),
+            (
+                "so it stays zero there, and experiment 08 fills it",
+                "so it is filled there, and experiment 08 fills it",
+            ),
             ("at revision `c751f811`", "at revision `c751f812`"),
             ("thinking on and sampler seed 91", "thinking off and sampler seed 91"),
             ("GPT-6 Sol at high effort", "GPT-6 Sol at max effort"),
